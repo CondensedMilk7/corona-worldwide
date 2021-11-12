@@ -1,0 +1,20 @@
+mat-card {
+  max-width: 240px;
+}
+
+mat-card-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  img {
+    width: 2rem;
+    margin-right: 8px;
+  }
+}
+
+.card-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+}

@@ -1,0 +1,9 @@
+<mat-card>
+  <div class="card-stat" *ngFor="let stat of data.stats">
+    <mat-card-subtitle> {{ stat.name }}: </mat-card-subtitle>
+    <p>{{ stat.value }}</p>
+  </div>
+  <mat-card-title>
+    <img [src]="iconUrl" alt="" /> {{ data.title }}
+  </mat-card-title>
+</mat-card>
