@@ -1,13 +1,16 @@
 // Bind this type of data to card from parent on [data]
-export interface StatCard {
-  title: string;
-  stats: { name: string; value: number }[];
+export class StatCardData {
+  constructor(
+    public title: string,
+    public stats: { name: string; value: number }[]
+  ) {}
 }
 
 // Bind colors to card with [colors]
-export interface StatCardColors {
-  primary: string;
-  accent: string;
-  // Most distinct color for numbers, white by default.
-  contrast?: string;
+export class StatCardColors {
+  constructor(
+    public primary: string,
+    public accent: string,
+    public contrast?: string
+  ) {}
 }

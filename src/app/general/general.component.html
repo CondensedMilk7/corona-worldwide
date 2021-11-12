@@ -1,1 +1,8 @@
 <h1>Global Statistics</h1>
+
+<app-stat-card
+  *ngFor="let card of cardsList"
+  [data]="card.data"
+  [colors]="card.colors"
+  [iconUrl]="card.iconUrl"
+></app-stat-card>
