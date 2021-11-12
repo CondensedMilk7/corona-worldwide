@@ -8,4 +8,6 @@ export interface StatCard {
 export interface StatCardColors {
   primary: string;
   accent: string;
+  // Most distinct color for numbers, white by default.
+  contrast?: string;
 }
