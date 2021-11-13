@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
+import { NgxEchartsModule } from 'ngx-echarts';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -30,6 +32,9 @@ import { StatCardComponent } from './general/stat-card/stat-card.component';
     MatButtonModule,
     MatCardModule,
     MatDividerModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,13 +1,20 @@
 <h1>Global Statistics</h1>
 
-<mat-card class="cards">
-  <mat-card-title>Updated at:</mat-card-title>
-  <mat-card-title class="date">{{ data.date | date }}</mat-card-title>
-  <mat-divider></mat-divider>
-  <app-stat-card
-    *ngFor="let card of cardsList"
-    [data]="card.data"
-    [colors]="card.colors"
-    [iconUrl]="card.iconUrl"
-  ></app-stat-card>
-</mat-card>
+<div class="container">
+  <mat-card class="cards">
+    <div class="update-date">
+      <mat-card-title>Updated at:</mat-card-title>
+      <mat-card-title class="date">{{ data.date | date }}</mat-card-title>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="cards__stats">
+      <app-stat-card
+        *ngFor="let card of cardsList"
+        [data]="card.data"
+        [colors]="card.colors"
+        [iconUrl]="card.iconUrl"
+      ></app-stat-card>
+    </div>
+  </mat-card>
+  <div class="chart" echarts [options]="chartOption"></div>
+</div>

@@ -14,7 +14,7 @@ export class StatService {
   getLatestGlobal() {
     return this.http.get<TimelineData>(`${this.baseUrl}/timeline`).pipe(
       map((resData) => {
-        return resData.data[0] as LatestGlobalData;
+        return resData.data as LatestGlobalData[];
       })
     );
   }

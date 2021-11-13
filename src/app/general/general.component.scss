@@ -5,13 +5,50 @@ h1 {
   padding: 12px 0;
 }
 
-.cards {
-  padding: 8px;
-  width: fit-content;
-  margin-left: 8px;
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .cards {
+    padding: 8px;
+    margin-left: 16px;
+  }
+
+  .date {
+    font-size: 1.2rem;
+    font-weight: normal;
+  }
+
+  .chart {
+    height: 500px;
+    width: 100%;
+    flex-grow: 1;
+    margin: 0 16px;
+    box-shadow: 0 2px 3px rgba($color: #000000, $alpha: 0.3);
+  }
 }
 
-.date {
-  font-size: 1.2rem;
-  font-weight: normal;
+@media (max-width: 870px) {
+  .container {
+    flex-direction: column;
+
+    .cards {
+      width: 98%;
+      margin: auto;
+      flex-wrap: wrap;
+
+      .cards__stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        app-stat-card {
+          margin: 0 8px;
+          flex-basis: 0;
+          flex-grow: 1;
+          min-width: 224px;
+        }
+      }
+    }
+  }
 }
