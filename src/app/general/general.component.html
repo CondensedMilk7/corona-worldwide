@@ -16,5 +16,11 @@
       ></app-stat-card>
     </div>
   </mat-card>
-  <div class="chart" echarts [options]="chartOption"></div>
+  <div
+    class="chart"
+    echarts
+    [options]="chartOption"
+    [loading]="isLoading"
+    [autoResize]="true"
+  ></div>
 </div>

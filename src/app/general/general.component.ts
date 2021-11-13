@@ -68,18 +68,37 @@ export class GeneralComponent implements OnInit {
       yAxis: {
         type: 'value',
       },
+      legend: {
+        orient: 'horizontal',
+        top: 'bottom',
+        data: ['New Confirmed', 'Deaths', 'Recovered'],
+        icon: 'rect',
+      },
       series: [
         {
+          name: 'New Confirmed',
           data: this.chartSeriesArr('new_confirmed'),
           type: 'line',
+          stack: 'x',
+          areaStyle: {},
+          smooth: true,
+          color: this.cardsList[0].colors.primary,
         },
         {
+          name: 'Deaths',
           data: this.chartSeriesArr('new_deaths'),
           type: 'line',
+          areaStyle: {},
+          smooth: true,
+          color: this.cardsList[1].colors.primary,
         },
         {
+          name: 'Recovered',
           data: this.chartSeriesArr('new_recovered'),
           type: 'line',
+          areaStyle: {},
+          smooth: true,
+          color: this.cardsList[2].colors.primary,
         },
       ],
     };
@@ -91,7 +110,6 @@ export class GeneralComponent implements OnInit {
     for (let data of this.chartData) {
       lineChartArr.push(data[property]);
     }
-    console.log(lineChartArr);
     // an array of single data property values from all given timeline
     // Reversed because the newest is first by default
     return lineChartArr.reverse();
