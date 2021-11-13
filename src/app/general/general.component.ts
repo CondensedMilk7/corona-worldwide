@@ -35,6 +35,7 @@ export class GeneralComponent implements OnInit {
   ngOnInit(): void {
     this.statService.getLatestGlobal().subscribe((data) => {
       this.data = data;
+      console.log(this.data);
       this.cardsList = [
         {
           data: new StatCardData('Active', [
