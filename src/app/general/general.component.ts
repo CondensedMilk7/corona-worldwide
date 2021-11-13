@@ -26,8 +26,8 @@ export class GeneralComponent implements OnInit {
   };
 
   chartData: LatestGlobalData[] = [];
-  daysInputVal = "";
-  daysOnChart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  totalDays = 10;
+  daysOnChart = this.listDays(this.totalDays);
 
   // iterable list of data for each card (in case I need to add more cards)
   cardsList: {
@@ -57,6 +57,15 @@ export class GeneralComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  // returns an array of numbers from 1 up to specified argument
+  listDays(days: number) {
+    const daysList = [];
+    for (let i = 1; i < days + 1; i++) {
+      daysList.push(i);
+    }
+    return daysList;
   }
 
   // creates options for chart
