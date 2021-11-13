@@ -10,6 +10,9 @@ import { StatCardData, StatCardColors } from './stat-card/stat-card.model';
   styleUrls: ['./general.component.scss'],
 })
 export class GeneralComponent implements OnInit {
+  isLoading = true;
+  isError = false;
+
   data: LatestGlobalData = {
     active: 0,
     confirmed: 0,
@@ -23,7 +26,7 @@ export class GeneralComponent implements OnInit {
   };
 
   chartData: LatestGlobalData[] = [];
-  daysOnChart = [1, 2, 3, 4, 5, 6, 7];
+  daysOnChart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   // iterable list of data for each card (in case I need to add more cards)
   cardsList: {
@@ -32,50 +35,66 @@ export class GeneralComponent implements OnInit {
     iconUrl: string;
   }[] = [];
 
-  chartOption: EChartsOption = {
-    xAxis: {
-      type: 'category',
-      data: [...this.daysOnChart.slice(0, -1).reverse(), 'today'], // to exclude last day
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        data: this.lineChart('new_confirmed'),
-        type: 'line',
-      },
-      {
-        data: this.lineChart('new_deaths'),
-        type: 'line',
-      },
-      {
-        data: this.lineChart('new_recovered'),
-        type: 'line',
-      },
-    ],
-  };
+  chartOption: EChartsOption = {};
 
   constructor(private statService: StatService) {}
 
   ngOnInit(): void {
-    this.statService.getLatestGlobal().subscribe((data) => {
-      this.data = data[0];
-      this.cardsList = this.generateCardData(this.data);
-      this.chartData = this.getChartData(this.daysOnChart.length, data);
-      console.log(this.chartData);
-    });
+    this.isLoading = true;
+    this.statService.getLatestGlobal().subscribe(
+      (data) => {
+        this.data = data[0];
+        this.cardsList = this.generateCardData(this.data);
+        this.chartData = this.getChartData(this.daysOnChart.length, data);
+        this.generateChartOptions();
+
+        this.isLoading = false;
+        this.isError = false;
+      },
+      (error) => {
+        this.isError = true;
+        console.log(error);
+      }
+    );
+  }
+
+  // creates options for chart
+  generateChartOptions() {
+    this.chartOption = {
+      xAxis: {
+        type: 'category',
+        data: [...this.daysOnChart.slice(0, -1).reverse(), 'today'], // to exclude last day
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          data: this.chartSeriesArr('new_confirmed'),
+          type: 'line',
+        },
+        {
+          data: this.chartSeriesArr('new_deaths'),
+          type: 'line',
+        },
+        {
+          data: this.chartSeriesArr('new_recovered'),
+          type: 'line',
+        },
+      ],
+    };
   }
 
   // Returns an array of chartData's elements property values throughout entire timeline, to be displayed as a line on chart
-  lineChart(property: 'new_confirmed' | 'new_deaths' | 'new_recovered') {
+  chartSeriesArr(property: 'new_confirmed' | 'new_deaths' | 'new_recovered') {
     let lineChartArr = [];
     for (let data of this.chartData) {
-      console.log(data);
       lineChartArr.push(data[property]);
     }
     console.log(lineChartArr);
-    return lineChartArr; // an array of single data property values from all given timeline
+    // an array of single data property values from all given timeline
+    // Reversed because the newest is first by default
+    return lineChartArr.reverse();
   }
 
   // Return created data for cards based on provided data
