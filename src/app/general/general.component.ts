@@ -26,6 +26,7 @@ export class GeneralComponent implements OnInit {
   };
 
   chartData: LatestGlobalData[] = [];
+  daysInputVal = "";
   daysOnChart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   // iterable list of data for each card (in case I need to add more cards)

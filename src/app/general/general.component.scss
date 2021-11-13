@@ -19,12 +19,13 @@ h1 {
     font-weight: normal;
   }
 
-  .chart {
-    height: 500px;
+  .chart-card {
     width: 100%;
     flex-grow: 1;
     margin: 0 16px;
-    box-shadow: 0 2px 3px rgba($color: #000000, $alpha: 0.3);
+    .chart {
+      height: 420px;
+    }
   }
 }
 
