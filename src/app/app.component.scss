@@ -14,4 +14,19 @@ mat-toolbar {
   .active {
     background: rgba($color: #000000, $alpha: 0.1);
   }
+
+  .menu {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  mat-toolbar {
+    .nav-button {
+      display: none;
+    }
+    .menu {
+      display: block;
+    }
+  }
 }

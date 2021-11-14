@@ -2,11 +2,24 @@
   <img src="../assets/icons/virus-solid.svg" alt="" class="header-icon" />
   <h2>Corona Worldwide</h2>
   <span class="spacer"></span>
-  <button mat-button routerLink="/general" routerLinkActive="active">
+  <button
+    class="nav-button"
+    mat-button
+    routerLink="/general"
+    routerLinkActive="active"
+  >
     General
   </button>
-  <button mat-button routerLink="/countries" routerLinkActive="active">
+  <button
+    class="nav-button"
+    mat-button
+    routerLink="/countries"
+    routerLinkActive="active"
+  >
     Countries
+  </button>
+  <button class="menu" mat-icon-button>
+    <mat-icon>menu</mat-icon>
   </button>
 </mat-toolbar>
 <router-outlet></router-outlet>
