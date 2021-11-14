@@ -46,7 +46,7 @@ export class GeneralComponent implements OnInit {
       (data) => {
         this.data = data[0];
         this.cardsList = this.generateCardData(this.data);
-        this.chartData = this.getChartData(this.daysOnChart.length, data);
+        this.chartData = this.getChartData(this.totalDays, data);
         this.generateChartOptions();
 
         this.isLoading = false;
@@ -60,6 +60,7 @@ export class GeneralComponent implements OnInit {
   }
 
   // returns an array of numbers from 1 up to specified argument
+  // needed to list out days on chart
   listDays(days: number) {
     const daysList = [];
     for (let i = 1; i < days + 1; i++) {
@@ -159,6 +160,7 @@ export class GeneralComponent implements OnInit {
     ];
   }
 
+  // extract timeline from data for given amount of days
   getChartData(days: number, data: LatestGlobalData[]) {
     let daysOfData = [];
     for (let i = 0; i < days; i++) {
