@@ -6,12 +6,12 @@ import { GeneralComponent } from './general/general.component';
 
 const routes: Routes = [
   { path: 'general', component: GeneralComponent },
+  { path: '', redirectTo: 'general', pathMatch: 'full' },
   {
     path: 'countries',
     component: CountriesComponent,
-    children: [{ path: ':country', component: CountryComponent }],
   },
-  { path: '', redirectTo: 'general', pathMatch: 'full' },
+  { path: ':country', component: CountryComponent },
 ];
 
 @NgModule({

@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,12 +35,15 @@ import { FilterPipe } from './shared/pipes/filter.pipe';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
+
     MatToolbarModule,
     MatButtonModule,
     MatCardModule,
     MatDividerModule,
     MatInputModule,
-    FormsModule,
+    MatIconModule,
+    
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.
     }),
