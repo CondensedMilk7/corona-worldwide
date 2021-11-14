@@ -17,6 +17,8 @@ import { GeneralComponent } from './general/general.component';
 import { CountriesComponent } from './countries/countries.component';
 import { StatCardComponent } from './general/stat-card/stat-card.component';
 import { FormsModule } from '@angular/forms';
+import { CountryComponent } from './countries/country/country.component';
+import { FilterPipe } from './shared/pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { FormsModule } from '@angular/forms';
     GeneralComponent,
     CountriesComponent,
     StatCardComponent,
+    CountryComponent,
+    FilterPipe,
   ],
   imports: [
     BrowserModule,
