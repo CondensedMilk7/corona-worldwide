@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
-import { LatestGlobalData } from '../shared/models/timeline-data.model';
+import { TimelineData } from '../shared/models/timeline-data.model';
 import { StatService } from '../shared/stat.service';
 import { StatCardData, StatCardColors } from './stat-card/stat-card.model';
 
@@ -13,7 +13,7 @@ export class GeneralComponent implements OnInit {
   isLoading = true;
   isError = false;
 
-  data: LatestGlobalData = {
+  data: TimelineData = {
     active: 0,
     confirmed: 0,
     date: '',
@@ -25,7 +25,7 @@ export class GeneralComponent implements OnInit {
     updated_at: '',
   };
 
-  chartData: LatestGlobalData[] = [];
+  chartData: TimelineData[] = [];
   totalDays = 10;
   daysOnChart = this.listDays(this.totalDays);
 
@@ -127,7 +127,7 @@ export class GeneralComponent implements OnInit {
   }
 
   // Return created data for cards based on provided data
-  generateCardData(data: LatestGlobalData): {
+  generateCardData(data: TimelineData): {
     data: StatCardData;
     colors: StatCardColors;
     iconUrl: string;
@@ -161,7 +161,7 @@ export class GeneralComponent implements OnInit {
   }
 
   // extract timeline from data for given amount of days
-  getChartData(days: number, data: LatestGlobalData[]) {
+  getChartData(days: number, data: TimelineData[]) {
     let daysOfData = [];
     for (let i = 0; i < days; i++) {
       daysOfData.push(data[i]);

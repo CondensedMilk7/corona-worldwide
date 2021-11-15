@@ -8,7 +8,7 @@ import { StatService } from 'src/app/shared/stat.service';
   styleUrls: ['./countries-list.component.scss'],
 })
 export class CountriesListComponent implements OnInit {
-  countryNames: string[] = [];
+  countries: { name: string; code: string }[] = [];
   searchText = '';
   isLoading = true;
 
@@ -16,13 +16,13 @@ export class CountriesListComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.statService.getCountryNames().subscribe((names) => {
-      this.countryNames = names;
+    this.statService.getCountryCodes().subscribe((data) => {
+      this.countries = data;
       this.isLoading = false;
     });
   }
 
-  onCountryClicked(country: string) {
-    this.router.navigate(['/countries/' + country.toLocaleLowerCase()]);
+  onCountryClicked(country: { name: string; code: string }) {
+    this.router.navigate([`/countries/${country.code}/${country.name}`]);
   }
 }

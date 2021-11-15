@@ -1,10 +1,5 @@
-// The type of data received from baseUrl/timeline request
-export interface TimelineData {
-  data: LatestGlobalData[];
-  _cacheHit: boolean;
-}
 // extracted relevant data from fetched TimelineData
-export interface LatestGlobalData {
+export interface TimelineData {
   active: number;
   confirmed: number;
   date: string;

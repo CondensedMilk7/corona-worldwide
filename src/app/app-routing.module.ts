@@ -13,7 +13,7 @@ const routes: Routes = [
     component: CountriesComponent,
     children: [
       { path: 'list', component: CountriesListComponent },
-      { path: ':country', component: CountryComponent },
+      { path: ':code/:country', component: CountryComponent },
       { path: '', redirectTo: 'list', pathMatch: 'full' },
     ],
   },

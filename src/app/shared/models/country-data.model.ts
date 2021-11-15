@@ -1,3 +1,6 @@
+import { TimelineData } from './timeline-data.model';
+
+// Type of for a specific country
 export interface CountryData {
   coordinates: {
     latitude: number;
@@ -12,15 +15,16 @@ export interface CountryData {
     confirmed: number;
   };
   latest_data: {
+    calculated: {
+      death_rate: number;
+      recovery_rate: number;
+      recovered_vs_death_ratio: null;
+      cases_per_million_population: number;
+    };
     deaths: number;
     confirmed: number;
     recovered: number;
     critical: number;
   };
-  calculated: {
-    death_rate: number;
-    recovery_rate: number;
-    recovered_vs_death_ratio: null;
-    cases_per_million_population: number;
-  };
+  timeline: TimelineData[];
 }
