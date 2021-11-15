@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { StatService } from '../shared/stat.service';
 
 @Component({
   selector: 'app-countries',
@@ -8,18 +6,7 @@ import { StatService } from '../shared/stat.service';
   styleUrls: ['./countries.component.scss'],
 })
 export class CountriesComponent implements OnInit {
-  countryNames: string[] = [];
-  searchText = '';
+  constructor() {}
 
-  constructor(private statService: StatService, private router: Router) {}
-
-  ngOnInit(): void {
-    this.statService.getCountryNames().subscribe((names) => {
-      this.countryNames = names;
-    });
-  }
-
-  onCountryClicked(country: string) {
-    this.router.navigate(['/' + country.toLocaleLowerCase()]);
-  }
+  ngOnInit(): void {}
 }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CountriesListComponent } from './countries/countries-list/countries-list.component';
 import { CountriesComponent } from './countries/countries.component';
 import { CountryComponent } from './countries/country/country.component';
 import { GeneralComponent } from './general/general.component';
@@ -10,8 +11,12 @@ const routes: Routes = [
   {
     path: 'countries',
     component: CountriesComponent,
+    children: [
+      { path: 'list', component: CountriesListComponent },
+      { path: ':country', component: CountryComponent },
+      { path: '', redirectTo: 'list', pathMatch: 'full' },
+    ],
   },
-  { path: ':country', component: CountryComponent },
 ];
 
 @NgModule({

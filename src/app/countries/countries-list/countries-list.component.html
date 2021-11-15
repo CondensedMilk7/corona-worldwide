@@ -1,0 +1,18 @@
+<div class="search-bar">
+  <input
+    matInput
+    type="text"
+    [(ngModel)]="searchText"
+    placeholder="Search for a country"
+  />
+  <mat-icon>search</mat-icon>
+</div>
+<div class="container">
+  <mat-card
+    class="country-card"
+    *ngFor="let name of countryNames | filter: searchText"
+    (click)="onCountryClicked(name)"
+  >
+    <mat-card-title class="country-name"> {{ name }} </mat-card-title>
+  </mat-card>
+</div>

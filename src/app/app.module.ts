@@ -20,6 +20,7 @@ import { StatCardComponent } from './general/stat-card/stat-card.component';
 import { FormsModule } from '@angular/forms';
 import { CountryComponent } from './countries/country/country.component';
 import { FilterPipe } from './shared/pipes/filter.pipe';
+import { CountriesListComponent } from './countries/countries-list/countries-list.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { FilterPipe } from './shared/pipes/filter.pipe';
     StatCardComponent,
     CountryComponent,
     FilterPipe,
+    CountriesListComponent,
   ],
   imports: [
     BrowserModule,
