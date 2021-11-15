@@ -14,7 +14,12 @@
     font-size: inherit;
     padding: 2px;
     border: none;
+
+    &:focus {
+      outline: none;
+    }
   }
+
   mat-icon {
     transform: scale(1.3);
     margin-left: 8px;
