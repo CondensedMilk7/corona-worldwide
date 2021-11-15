@@ -1,6 +1,6 @@
 <h1>Global Statistics</h1>
-
-<div class="container">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<div class="container" *ngIf="!isLoading">
   <mat-card class="cards">
     <div class="update-date">
       <mat-card-title>Updated at:</mat-card-title>

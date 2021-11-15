@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -45,7 +46,8 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
     MatDividerModule,
     MatInputModule,
     MatIconModule,
-    
+    MatProgressSpinnerModule,
+
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.
     }),

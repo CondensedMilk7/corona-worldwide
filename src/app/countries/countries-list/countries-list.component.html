@@ -7,7 +7,8 @@
   />
   <mat-icon>search</mat-icon>
 </div>
-<div class="container">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<div class="container" *ngIf="!isLoading">
   <mat-card
     class="country-card"
     *ngFor="let name of countryNames | filter: searchText"

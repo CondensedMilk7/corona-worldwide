@@ -10,12 +10,15 @@ import { StatService } from 'src/app/shared/stat.service';
 export class CountriesListComponent implements OnInit {
   countryNames: string[] = [];
   searchText = '';
+  isLoading = true;
 
   constructor(private statService: StatService, private router: Router) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.statService.getCountryNames().subscribe((names) => {
       this.countryNames = names;
+      this.isLoading = false;
     });
   }
 
