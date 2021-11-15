@@ -151,8 +151,8 @@ export class GeneralComponent implements OnInit {
       },
       {
         data: new StatCardData('Recovered', [
-          { name: 'total', value: this.data.recovered },
-          { name: 'new today', value: this.data.new_recovered },
+          { name: 'total', value: data.recovered },
+          { name: 'new today', value: data.new_recovered },
         ]),
         colors: new StatCardColors('#48bb78', '#276749'),
         iconUrl: '../../assets/icons/heart-solid.svg',

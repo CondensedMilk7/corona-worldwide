@@ -1,5 +1,7 @@
 # CoronaWorldwide
 
+This corona API (https://corona-api.com/) is terribly messy and it's driving me crazy.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.4.
 
 ## Development server
