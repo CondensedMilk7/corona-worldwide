@@ -27,6 +27,7 @@ export class CountryComponent implements OnInit {
       )
       .subscribe((countryData) => {
         this.countryData = countryData;
+        console.log(this.countryData);
       });
   }
 }
