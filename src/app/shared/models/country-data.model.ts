@@ -1,6 +1,6 @@
 import { TimelineData } from './timeline-data.model';
 
-// Type of for a specific country
+// Type of data for a specific country
 export interface CountryData {
   coordinates: {
     latitude: number;

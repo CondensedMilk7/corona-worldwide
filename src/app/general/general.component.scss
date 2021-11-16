@@ -38,7 +38,7 @@ mat-spinner {
     flex-direction: column;
 
     .cards {
-      width: 98%;
+      width: 100%;
       margin: auto;
 
       .cards__stats {
@@ -53,6 +53,10 @@ mat-spinner {
           min-width: 224px;
         }
       }
+    }
+    .chart-card {
+      padding: 20px 0;
+      margin: 0;
     }
   }
 }

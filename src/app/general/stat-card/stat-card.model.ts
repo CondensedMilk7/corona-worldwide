@@ -14,3 +14,5 @@ export class StatCardColors {
     public contrast?: string
   ) {}
 }
+
+// NOTE: card also receives iconUrl type string
