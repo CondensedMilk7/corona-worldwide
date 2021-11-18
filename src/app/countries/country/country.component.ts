@@ -57,13 +57,21 @@ export class CountryComponent implements OnInit {
           { name: 'total', value: this.countryData.timeline[0].active },
           {
             name: 'new today',
-            value: this.countryData.timeline[0].new_confirmed,
+            // value: this.countryData.timeline[0].new_confirmed,
+            // value: this.countryData.today.confirmed,
+            value: this.avoidZero(
+              this.countryData.today.confirmed,
+              this.countryData.timeline[0].new_confirmed
+            ),
           },
           {
             name: 'case per million',
             value:
               this.countryData.latest_data.calculated
-                .cases_per_million_population / 10000 + '%',
+                .cases_per_million_population /
+                10000 +
+              '%', // Why the hell does it not give percentage by default, like it says in the docs and like it is in other calculated fields?
+            // I hate this API
           },
         ]),
         colors: new StatCardColors('#a0aec0', '#4a5568'),
@@ -72,10 +80,20 @@ export class CountryComponent implements OnInit {
       {
         data: new StatCardData('Deaths', [
           { name: 'total', value: this.countryData.latest_data.deaths },
-          { name: 'new today', value: this.countryData.timeline[0].new_deaths },
           {
-            name: 'percentage',
-            value: this.countryData.latest_data.calculated.death_rate,
+            name: 'new today',
+            // value: this.countryData.timeline[0].new_deaths
+            // value: this.countryData.today.deaths,
+            value: this.avoidZero(
+              this.countryData.timeline[0].new_deaths,
+              this.countryData.today.deaths
+            ),
+          },
+          {
+            name: 'rate',
+            value:
+              Math.round(this.countryData.latest_data.calculated.death_rate) +
+              '%',
           },
         ]),
         colors: new StatCardColors('#f56565', '#c53030'),
@@ -88,10 +106,27 @@ export class CountryComponent implements OnInit {
             name: 'new today',
             value: this.countryData.timeline[0].new_recovered,
           },
+          {
+            name: 'rate',
+            value:
+              Math.round(
+                this.countryData.latest_data.calculated.recovery_rate
+              ) + '%',
+          },
         ]),
         colors: new StatCardColors('#48bb78', '#276749'),
         iconUrl: '../../assets/icons/heart-solid.svg',
       },
     ];
+  }
+
+  // This is what I have to do to work around this STUPID, DUMBFOUNDED, ABSOULUTELIY ATROCIUS, INCONSSISTENT API
+  // Takes in numbers and returns whichever is not zero. IF THEY ARE ALL GOD DAMN ZERO THEN IT RETURNS ZERO.
+  avoidZero(...args: number[]) {
+    let nonZeroVal = 0;
+    for (let value of args) {
+      if (value !== 0) nonZeroVal = value;
+    }
+    return nonZeroVal;
   }
 }
