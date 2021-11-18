@@ -59,6 +59,12 @@ export class CountryComponent implements OnInit {
             name: 'new today',
             value: this.countryData.timeline[0].new_confirmed,
           },
+          {
+            name: 'case per million',
+            value:
+              this.countryData.latest_data.calculated
+                .cases_per_million_population / 10000 + '%',
+          },
         ]),
         colors: new StatCardColors('#a0aec0', '#4a5568'),
         iconUrl: '../../assets/icons/hospital-solid.svg',
@@ -67,6 +73,10 @@ export class CountryComponent implements OnInit {
         data: new StatCardData('Deaths', [
           { name: 'total', value: this.countryData.latest_data.deaths },
           { name: 'new today', value: this.countryData.timeline[0].new_deaths },
+          {
+            name: 'percentage',
+            value: this.countryData.latest_data.calculated.death_rate,
+          },
         ]),
         colors: new StatCardColors('#f56565', '#c53030'),
         iconUrl: '../../assets/icons/book-dead-solid.svg',

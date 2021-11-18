@@ -2,7 +2,7 @@
 export class StatCardData {
   constructor(
     public title: string,
-    public stats: { name: string; value: number }[]
+    public stats: { name: string; value: number | string }[]
   ) {}
 }
 
