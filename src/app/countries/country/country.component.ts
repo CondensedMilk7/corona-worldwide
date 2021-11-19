@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { switchMap, startWith, map } from 'rxjs/operators';
 import {
   StatCardColors,
   StatCardData,
 } from 'src/app/general/stat-card/stat-card.model';
 import { CountryData } from 'src/app/shared/models/country-data.model';
-import { TimelineData } from 'src/app/shared/models/timeline-data.model';
 import { StatService } from 'src/app/shared/stat.service';
 
 @Component({
@@ -16,7 +17,38 @@ import { StatService } from 'src/app/shared/stat.service';
 })
 export class CountryComponent implements OnInit {
   isLoading = true;
-  countryData: CountryData;
+  // Listing this all out to prevent errors in console: cannot read countryData.name in the template!
+  countryData: CountryData = {
+    name: '',
+    coordinates: {
+      latitude: 0,
+      longitude: 0,
+    },
+    code: '',
+    population: 0,
+    updated_at: '',
+    today: {
+      deaths: 0,
+      confirmed: 0,
+    },
+    latest_data: {
+      calculated: {
+        death_rate: 0,
+        recovery_rate: 0,
+        recovered_vs_death_ratio: null,
+        cases_per_million_population: 0,
+      },
+      deaths: 0,
+      confirmed: 0,
+      recovered: 0,
+      critical: 0,
+    },
+    timeline: [],
+  };
+  countryList: { name: string; code: string }[];
+  countryNames: string[];
+  countryControl = new FormControl();
+  filteredOptions: Observable<string[]>;
 
   statCards: {
     data: StatCardData;
@@ -41,9 +73,32 @@ export class CountryComponent implements OnInit {
       .subscribe((countryData) => {
         this.countryData = countryData;
         this.isLoading = false;
-        console.log(this.countryData);
         this.statCards = this.generateCardData();
       });
+    // Get the list of countries with codes to renavigate to different country
+    this.statService.getCountryCodes().subscribe((data) => {
+      this.countryList = data;
+      let namesList = [];
+      for (let country of data) {
+        namesList.push(country.name);
+      }
+      this.countryNames = namesList;
+
+      // TODO: switchMap or something, this looks like bad practice
+      this.filteredOptions = this.countryControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value))
+      );
+    });
+  }
+
+  // filter out country selector options based on input value
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.countryNames.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
   }
 
   generateCardData(): {

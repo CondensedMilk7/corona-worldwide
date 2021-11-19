@@ -1,10 +1,27 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
+<form>
+  <h2>Showing statistics for</h2>
+  <mat-form-field>
+    <mat-label>{{ countryData.name }}</mat-label>
+    <input
+      type="text"
+      placeholder="Pick a country"
+      aria-label="Country"
+      matInput
+      [formControl]="countryControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let country of filteredOptions | async"
+        [value]="country"
+      >
+        {{ country }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
 <div class="container" *ngIf="!isLoading">
-  <mat-card>
-    <mat-card-title>{{ countryData.name }}</mat-card-title>
-    <p>Population:</p>
-    <mat-card-subtitle> {{ countryData.population }} </mat-card-subtitle>
-  </mat-card>
   <app-stat-card
     *ngFor="let card of statCards"
     [data]="card.data"

@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,7 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GeneralComponent } from './general/general.component';
 import { CountriesComponent } from './countries/countries.component';
 import { StatCardComponent } from './general/stat-card/stat-card.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CountryComponent } from './countries/country/country.component';
 import { FilterPipe } from './shared/pipes/filter.pipe';
 import { CountriesListComponent } from './countries/countries-list/countries-list.component';
@@ -39,6 +40,7 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
 
     MatToolbarModule,
     MatButtonModule,
@@ -47,6 +49,7 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
     MatInputModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatAutocompleteModule,
 
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.
