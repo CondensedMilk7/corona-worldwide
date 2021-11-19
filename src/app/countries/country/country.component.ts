@@ -112,7 +112,7 @@ export class CountryComponent implements OnInit {
             name: 'new today',
             // value: this.countryData.timeline[0].new_confirmed,
             // value: this.countryData.today.confirmed,
-            value: this.avoidZero(
+            value: this._avoidZero(
               this.countryData.today.confirmed,
               this.countryData.timeline[0].new_confirmed
             ),
@@ -137,7 +137,7 @@ export class CountryComponent implements OnInit {
             name: 'new today',
             // value: this.countryData.timeline[0].new_deaths
             // value: this.countryData.today.deaths,
-            value: this.avoidZero(
+            value: this._avoidZero(
               this.countryData.timeline[0].new_deaths,
               this.countryData.today.deaths
             ),
@@ -175,7 +175,7 @@ export class CountryComponent implements OnInit {
 
   // This is what I have to do to work around this STUPID, DUMBFOUNDED, ABSOULUTELIY ATROCIUS, INCONSSISTENT API
   // Takes in numbers and returns whichever is not zero. IF THEY ARE ALL GOD DAMN ZERO THEN IT RETURNS ZERO.
-  avoidZero(...args: number[]) {
+  _avoidZero(...args: number[]) {
     let nonZeroVal = 0;
     for (let value of args) {
       if (value !== 0) nonZeroVal = value;
