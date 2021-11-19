@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, startWith, map } from 'rxjs/operators';
@@ -78,6 +79,7 @@ export class CountryComponent implements OnInit {
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
       this.countryList = data;
+      this.countryControl.setValue(this.countryData.name);
       // TODO: switchMap or something, this looks like bad practice
       this.filteredOptions = this.countryControl.valueChanges.pipe(
         startWith(''),
@@ -175,7 +177,7 @@ export class CountryComponent implements OnInit {
 
   // This is what I have to do to work around this STUPID, DUMBFOUNDED, ABSOULUTELIY ATROCIUS, INCONSSISTENT API
   // Takes in numbers and returns whichever is not zero. IF THEY ARE ALL GOD DAMN ZERO THEN IT RETURNS ZERO.
-  _avoidZero(...args: number[]) {
+  private _avoidZero(...args: number[]) {
     let nonZeroVal = 0;
     for (let value of args) {
       if (value !== 0) nonZeroVal = value;
