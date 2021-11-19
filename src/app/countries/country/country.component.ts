@@ -75,11 +75,12 @@ export class CountryComponent implements OnInit {
         this.countryData = countryData;
         this.isLoading = false;
         this.statCards = this.generateCardData();
+        this.countryControl.setValue(this.countryData.name);
       });
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
       this.countryList = data;
-      this.countryControl.setValue(this.countryData.name);
+
       // TODO: switchMap or something, this looks like bad practice
       this.filteredOptions = this.countryControl.valueChanges.pipe(
         startWith(''),

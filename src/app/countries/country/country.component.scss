@@ -1,7 +1,17 @@
 mat-spinner {
   margin: auto;
 }
+.container {
+  padding-top: 20px;
 
-mat-form-field {
-  margin-left: 8px;
+  .card-of-cards {
+    width: fit-content;
+    margin: 0 24px;
+
+    mat-form-field {
+      margin-left: 8px;
+      font-size: 1.2rem;
+      margin: 0;
+    }
+  }
 }

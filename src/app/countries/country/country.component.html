@@ -1,32 +1,37 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-toolbar>
-  <span>Showing statistics for </span>
-  <mat-form-field>
-    <input
-      class="input"
-      type="text"
-      placeholder="Pick a country"
-      aria-label="Country"
-      matInput
-      [formControl]="countryControl"
-      [matAutocomplete]="auto"
-    />
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option
-        (click)="onChangeCountry(country)"
-        *ngFor="let country of filteredOptions | async"
-        [value]="country.name"
-      >
-        {{ country.name }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-</mat-toolbar>
 <div class="container" *ngIf="!isLoading">
-  <app-stat-card
-    *ngFor="let card of statCards"
-    [data]="card.data"
-    [colors]="card.colors"
-    [iconUrl]="card.iconUrl"
-  ></app-stat-card>
+  <mat-card class="card-of-cards">
+    <div class="country-info">
+      <mat-form-field>
+        <input
+          class="input"
+          type="text"
+          placeholder="Pick a country"
+          aria-label="Country"
+          matInput
+          [formControl]="countryControl"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            (click)="onChangeCountry(country)"
+            *ngFor="let country of filteredOptions | async"
+            [value]="country.name"
+          >
+            {{ country.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <p>Population: {{ countryData.population }}</p>
+      <p>Data updated at: {{ countryData.updated_at | date }}</p>
+    </div>
+    <div class="stat-cards">
+      <app-stat-card
+        *ngFor="let card of statCards"
+        [data]="card.data"
+        [colors]="card.colors"
+        [iconUrl]="card.iconUrl"
+      ></app-stat-card>
+    </div>
+  </mat-card>
 </div>
