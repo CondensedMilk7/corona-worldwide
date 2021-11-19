@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, startWith, map } from 'rxjs/operators';
 import {
@@ -46,9 +46,8 @@ export class CountryComponent implements OnInit {
     timeline: [],
   };
   countryList: { name: string; code: string }[];
-  countryNames: string[];
   countryControl = new FormControl();
-  filteredOptions: Observable<string[]>;
+  filteredOptions: Observable<{ name: string; code: string }[]>;
 
   statCards: {
     data: StatCardData;
@@ -58,14 +57,15 @@ export class CountryComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private statService: StatService
+    private statService: StatService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
     this.route.params
       .pipe(
         switchMap((params) => {
+          this.isLoading = true;
           const code = params.code;
           return this.statService.getCountryData(code);
         })
@@ -78,12 +78,6 @@ export class CountryComponent implements OnInit {
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
       this.countryList = data;
-      let namesList = [];
-      for (let country of data) {
-        namesList.push(country.name);
-      }
-      this.countryNames = namesList;
-
       // TODO: switchMap or something, this looks like bad practice
       this.filteredOptions = this.countryControl.valueChanges.pipe(
         startWith(''),
@@ -92,12 +86,16 @@ export class CountryComponent implements OnInit {
     });
   }
 
+  onChangeCountry(country: { name: string; code: string }) {
+    this.router.navigate([`/countries/${country.code}/${country.name}`]);
+  }
+
   // filter out country selector options based on input value
-  private _filter(value: string): string[] {
+  private _filter(value: string): { name: string; code: string }[] {
     const filterValue = value.toLowerCase();
 
-    return this.countryNames.filter((option) =>
-      option.toLowerCase().includes(filterValue)
+    return this.countryList.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
     );
   }
 

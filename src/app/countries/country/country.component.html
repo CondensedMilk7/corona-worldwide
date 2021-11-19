@@ -12,11 +12,11 @@
       [matAutocomplete]="auto"
     />
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option
+      <mat-option (click)="onChangeCountry(country)"
         *ngFor="let country of filteredOptions | async"
-        [value]="country"
+        [value]="country.name"
       >
-        {{ country }}
+        {{ country.name }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
