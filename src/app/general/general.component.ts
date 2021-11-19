@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { TimelineData } from '../shared/models/timeline-data.model';
 import { StatService } from '../shared/stat.service';
-import { StatCardData, StatCardColors } from './stat-card/stat-card.model';
+import { StatCardData, StatCardColors } from '../shared/models/stat-card.model';
 
 @Component({
   selector: 'app-general',

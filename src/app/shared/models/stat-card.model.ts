@@ -1,3 +1,5 @@
+// Classes used for constructing app-stat-card
+
 // Bind this type of data to card from parent on [data]
 export class StatCardData {
   constructor(

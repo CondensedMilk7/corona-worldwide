@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, startWith, map } from 'rxjs/operators';
 import {
   StatCardColors,
   StatCardData,
-} from 'src/app/general/stat-card/stat-card.model';
+} from 'src/app/shared/models/stat-card.model';
 import { CountryData } from 'src/app/shared/models/country-data.model';
 import { StatService } from 'src/app/shared/stat.service';
 

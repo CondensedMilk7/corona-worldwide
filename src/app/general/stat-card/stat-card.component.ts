@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StatCardData, StatCardColors } from './stat-card.model';
+import { StatCardData, StatCardColors } from '../../shared/models/stat-card.model';
 
 @Component({
   selector: 'app-stat-card',
