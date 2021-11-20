@@ -33,19 +33,19 @@
     ></app-stat-card>
   </mat-card>
   <mat-card class="chart-card">
+    <mat-card-title>Total cases</mat-card-title>
     <div
       class="line-chart chart"
       echarts
       [options]="lineChartOption"
       [loading]="isLoading"
-      [autoResize]="true"
     ></div>
+    <mat-card-title>Cases daily</mat-card-title>
     <div
       class="bar-chart chart"
       echarts
       [options]="barChartOption"
       [loading]="isLoading"
-      [autoResize]="true"
     ></div>
   </mat-card>
 </div>

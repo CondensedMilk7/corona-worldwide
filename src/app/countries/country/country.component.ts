@@ -148,19 +148,35 @@ export class CountryComponent implements OnInit {
 
     this.barChartOption = {
       xAxis: {
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: this._timelineOnChart(),
       },
       yAxis: {},
       series: [
         {
+          name: 'Confirmed',
+          data: this._caseArrayTimeline('new_confirmed'),
           type: 'bar',
-          data: [23, 24, 18, 25, 27, 28, 25],
+          color: this.statCards[0].colors.primary,
         },
         {
+          name: 'Deaths',
+          data: this._caseArrayTimeline('new_deaths'),
           type: 'bar',
-          data: [26, 24, 18, 22, 23, 20, 27],
+          color: this.statCards[1].colors.primary,
+        },
+        {
+          name: 'Recovered',
+          data: this._caseArrayTimeline('new_recovered'),
+          type: 'bar',
+          color: this.statCards[2].colors.primary,
         },
       ],
+      legend: {
+        orient: 'horizontal',
+        top: 'bottom',
+        data: ['Confirmed', 'Deaths', 'Recovered'],
+        icon: 'rect',
+      },
     };
   }
 
