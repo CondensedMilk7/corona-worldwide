@@ -179,7 +179,7 @@ export class CountryComponent implements OnInit {
       },
     };
   }
-
+  // TODO: Make all this reusable. It is repeated in general component
   // generate an array from values of specified property on timeline data
   private _caseArrayTimeline(property: string) {
     const caseArray = [];

@@ -12,14 +12,14 @@ export class StatService {
   constructor(private http: HttpClient) {}
 
   // Get entire global timeline and only return latest
-  getLatestGlobal() {
+  getGlobal() {
     return this.http
       .get<{ data: TimelineData[]; _cacheHit: boolean }>(
         `${this.baseUrl}/timeline`
       )
       .pipe(
         map((resData) => {
-          return resData.data as TimelineData[];
+          return resData.data;
         })
       );
   }

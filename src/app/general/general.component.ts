@@ -3,6 +3,7 @@ import { EChartsOption } from 'echarts';
 import { TimelineData } from '../shared/models/timeline-data.model';
 import { StatService } from '../shared/stat.service';
 import { StatCardData, StatCardColors } from '../shared/models/stat-card.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-general',
@@ -13,21 +14,7 @@ export class GeneralComponent implements OnInit {
   isLoading = true;
   isError = false;
 
-  data: TimelineData = {
-    active: 0,
-    confirmed: 0,
-    date: '',
-    new_confirmed: 0,
-    deaths: 0,
-    new_deaths: 0,
-    new_recovered: 0,
-    recovered: 0,
-    updated_at: '',
-  };
-
-  chartData: TimelineData[] = [];
-  totalDays = 10;
-  daysOnChart = this.listDays(this.totalDays);
+  data: TimelineData[] = [];
 
   // iterable list of data for each card (in case I need to add more cards)
   cardsList: {
@@ -38,43 +25,22 @@ export class GeneralComponent implements OnInit {
 
   chartOption: EChartsOption = {};
 
-  constructor(private statService: StatService) {}
+  constructor(private statService: StatService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.statService.getLatestGlobal().subscribe(
-      (data) => {
-        this.data = data[0];
-        this.cardsList = this.generateCardData(this.data);
-        this.chartData = this.getChartData(this.totalDays, data);
-        this.generateChartOptions();
-
-        this.isLoading = false;
-        this.isError = false;
-      },
-      (error) => {
-        this.isError = true;
-        console.log(error);
-      }
-    );
+    this.statService.getGlobal().subscribe((data) => {
+      this.data = data;
+      this.isLoading = false;
+      this.cardsList = this.generateCardData();
+      this.generateChartOptions();
+    });
   }
-
-  // returns an array of numbers from 1 up to specified argument
-  // needed to list out days on chart
-  listDays(days: number) {
-    const daysList = [];
-    for (let i = 1; i < days + 1; i++) {
-      daysList.push(i);
-    }
-    return daysList;
-  }
-
   // creates options for chart
   generateChartOptions() {
     this.chartOption = {
       xAxis: {
         type: 'category',
-        data: [...this.daysOnChart.slice(0, -1).reverse(), 'today'], // to exclude last day
+        data: this._timelineOnChart(), // to exclude last day
       },
       yAxis: {
         type: 'value',
@@ -88,7 +54,7 @@ export class GeneralComponent implements OnInit {
       series: [
         {
           name: 'New Confirmed',
-          data: this.chartSeriesArr('new_confirmed'),
+          data: this._caseArrayTimeline('confirmed'),
           type: 'line',
           stack: 'x',
           areaStyle: {},
@@ -97,7 +63,7 @@ export class GeneralComponent implements OnInit {
         },
         {
           name: 'Deaths',
-          data: this.chartSeriesArr('new_deaths'),
+          data: this._caseArrayTimeline('deaths'),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -105,7 +71,7 @@ export class GeneralComponent implements OnInit {
         },
         {
           name: 'Recovered',
-          data: this.chartSeriesArr('new_recovered'),
+          data: this._caseArrayTimeline('recovered'),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -115,19 +81,8 @@ export class GeneralComponent implements OnInit {
     };
   }
 
-  // Returns an array of chartData's elements property values throughout entire timeline, to be displayed as a line on chart
-  chartSeriesArr(property: 'new_confirmed' | 'new_deaths' | 'new_recovered') {
-    let lineChartArr = [];
-    for (let data of this.chartData) {
-      lineChartArr.push(data[property]);
-    }
-    // an array of single data property values from all given timeline
-    // Reversed because the newest is first by default
-    return lineChartArr.reverse();
-  }
-
   // Return created data for cards based on provided data
-  generateCardData(data: TimelineData): {
+  generateCardData(): {
     data: StatCardData;
     colors: StatCardColors;
     iconUrl: string;
@@ -135,24 +90,24 @@ export class GeneralComponent implements OnInit {
     return [
       {
         data: new StatCardData('Active', [
-          { name: 'total', value: data.active },
-          { name: 'new today', value: data.new_confirmed },
+          { name: 'total', value: this.data[0].active },
+          { name: 'new today', value: this.data[0].new_confirmed },
         ]),
         colors: new StatCardColors('#a0aec0', '#4a5568'),
         iconUrl: '../../assets/icons/hospital-solid.svg',
       },
       {
         data: new StatCardData('Deaths', [
-          { name: 'total', value: data.deaths },
-          { name: 'new today', value: data.new_deaths },
+          { name: 'total', value: this.data[0].deaths },
+          { name: 'new today', value: this.data[0].new_deaths },
         ]),
         colors: new StatCardColors('#f56565', '#c53030'),
         iconUrl: '../../assets/icons/book-dead-solid.svg',
       },
       {
         data: new StatCardData('Recovered', [
-          { name: 'total', value: data.recovered },
-          { name: 'new today', value: data.new_recovered },
+          { name: 'total', value: this.data[0].recovered },
+          { name: 'new today', value: this.data[0].new_recovered },
         ]),
         colors: new StatCardColors('#48bb78', '#276749'),
         iconUrl: '../../assets/icons/heart-solid.svg',
@@ -160,12 +115,20 @@ export class GeneralComponent implements OnInit {
     ];
   }
 
-  // extract timeline from data for given amount of days
-  getChartData(days: number, data: TimelineData[]) {
-    let daysOfData = [];
-    for (let i = 0; i < days; i++) {
-      daysOfData.push(data[i]);
+  private _caseArrayTimeline(property: string) {
+    const caseArray = [];
+    for (let item of this.data) {
+      caseArray.unshift(item[property]); // Reversed, from oldest to newest needed
     }
-    return daysOfData;
+    return caseArray;
+  }
+
+  // Generate array of date strings to display on chart's X axis
+  private _timelineOnChart(): string[] {
+    const timelineArr = [];
+    for (let item of this.data) {
+      timelineArr.unshift(this.datePipe.transform(item.updated_at)); // Reversed so that it's from oldest to newest
+    }
+    return timelineArr;
   }
 }

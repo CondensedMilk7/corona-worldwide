@@ -4,7 +4,9 @@
   <mat-card class="cards">
     <div class="update-date">
       <mat-card-title>Updated at:</mat-card-title>
-      <mat-card-title class="date">{{ data.date | date }}</mat-card-title>
+      <mat-card-title class="date">{{
+        data[0].updated_at | date
+      }}</mat-card-title>
     </div>
     <mat-divider></mat-divider>
     <div class="cards__stats">
@@ -17,7 +19,7 @@
     </div>
   </mat-card>
   <mat-card class="chart-card">
-    <mat-card-title> Cases in last {{ totalDays }} days </mat-card-title>
+    <mat-card-title> Total cases </mat-card-title>
     <mat-card-subtitle>From oldest to newest </mat-card-subtitle>
     <div
       class="chart"
@@ -25,6 +27,7 @@
       [options]="chartOption"
       [loading]="isLoading"
       [autoResize]="true"
+      [merge]=""
     ></div>
   </mat-card>
 </div>
