@@ -24,6 +24,9 @@ export class GeneralComponent implements OnInit {
   }[] = [];
 
   chartOption: EChartsOption = {};
+  dateOptions: string[] = [];
+  selectedDateData: TimelineData;
+  customChartOption: EChartsOption = {};
 
   constructor(private statService: StatService, private datePipe: DatePipe) {}
 
@@ -33,14 +36,20 @@ export class GeneralComponent implements OnInit {
       this.isLoading = false;
       this.cardsList = this.generateCardData();
       this.generateChartOptions();
+      this.generateDateOptions();
     });
   }
-  // creates options for chart
-  generateChartOptions() {
-    this.chartOption = {
+
+  onDatePicked(date: string) {
+    const selectedDateData = this.data.find((item) => {
+      return item.updated_at === date;
+    });
+    this.selectedDateData = selectedDateData;
+
+    this.customChartOption = {
       xAxis: {
         type: 'category',
-        data: this._timelineOnChart(), // to exclude last day
+        data: [selectedDateData.updated_at],
       },
       yAxis: {
         type: 'value',
@@ -48,12 +57,58 @@ export class GeneralComponent implements OnInit {
       legend: {
         orient: 'horizontal',
         top: 'bottom',
-        data: ['New Confirmed', 'Deaths', 'Recovered'],
+        data: ['Confirmed', 'Deaths', 'Recovered'],
         icon: 'rect',
       },
       series: [
         {
-          name: 'New Confirmed',
+          name: 'Confirmed',
+          data: [selectedDateData.new_confirmed],
+          type: 'line',
+          stack: 'x',
+          areaStyle: {},
+          smooth: true,
+          color: this.cardsList[0].colors.primary,
+        },
+        {
+          name: 'Deaths',
+          data: [selectedDateData.new_deaths],
+          type: 'line',
+          areaStyle: {},
+          smooth: true,
+          color: this.cardsList[1].colors.primary,
+        },
+        {
+          name: 'Recovered',
+          data: [selectedDateData.new_recovered],
+          type: 'line',
+          areaStyle: {},
+          smooth: true,
+          color: this.cardsList[2].colors.primary,
+        },
+      ],
+    };
+  }
+
+  // creates options for chart
+  generateChartOptions() {
+    this.chartOption = {
+      xAxis: {
+        type: 'category',
+        data: this._timelineOnChart(),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      legend: {
+        orient: 'horizontal',
+        top: 'bottom',
+        data: ['Confirmed', 'Deaths', 'Recovered'],
+        icon: 'rect',
+      },
+      series: [
+        {
+          name: 'Confirmed',
           data: this._caseArrayTimeline('confirmed'),
           type: 'line',
           stack: 'x',
@@ -113,6 +168,15 @@ export class GeneralComponent implements OnInit {
         iconUrl: '../../assets/icons/heart-solid.svg',
       },
     ];
+  }
+
+  // Generates list of dates that can be picked on the chart to display data for that date
+  generateDateOptions() {
+    const dateList = [];
+    for (let item of this.data) {
+      dateList.unshift(item.updated_at); // Will only be piped trough date pipe for visuals
+    }
+    this.dateOptions = dateList;
   }
 
   private _caseArrayTimeline(property: string) {

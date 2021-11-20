@@ -26,6 +26,11 @@ mat-spinner {
     width: 100%;
     flex-grow: 1;
     margin: 0 24px;
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+    }
     .chart {
       height: 418px;
       max-width: 1500px;

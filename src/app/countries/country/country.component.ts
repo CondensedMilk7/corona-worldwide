@@ -72,6 +72,7 @@ export class CountryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.route.params
       .pipe(
         switchMap((params) => {
@@ -83,10 +84,10 @@ export class CountryComponent implements OnInit {
       .subscribe((countryData) => {
         this.countryData = countryData;
         this.timelineData = countryData.timeline;
-        this.isLoading = false;
         this.statCards = this.generateCardData();
         this.countryControl.setValue(this.countryData.name); // Set the value for country picker
         this.generateChartOptions();
+        this.isLoading = false;
       });
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {

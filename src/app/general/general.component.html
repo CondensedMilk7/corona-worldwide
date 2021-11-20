@@ -19,15 +19,28 @@
     </div>
   </mat-card>
   <mat-card class="chart-card">
-    <mat-card-title> Total cases </mat-card-title>
-    <mat-card-subtitle>From oldest to newest </mat-card-subtitle>
+    <div class="card-header">
+      <mat-card-title> Total cases </mat-card-title>
+      <mat-form-field>
+        <mat-label>Select Date</mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let date of dateOptions"
+            [value]="date"
+            (click)="onDatePicked(date)"
+          >
+            {{ date | date }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div
       class="chart"
       echarts
       [options]="chartOption"
       [loading]="isLoading"
       [autoResize]="true"
-      [merge]=""
+      [merge]="customChartOption"
     ></div>
   </mat-card>
 </div>
