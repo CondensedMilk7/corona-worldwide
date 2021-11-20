@@ -1,5 +1,4 @@
-<mat-spinner *ngIf="isLoading"></mat-spinner>
-<div class="container" *ngIf="!isLoading">
+<div class="container">
   <mat-card class="card-of-cards">
     <div class="country-info">
       <mat-form-field>
@@ -25,20 +24,26 @@
       <p>Population: {{ countryData.population }}</p>
       <p>Data updated at: {{ countryData.updated_at | date }}</p>
     </div>
-    <div class="stat-cards">
-      <app-stat-card
-        *ngFor="let card of statCards"
-        [data]="card.data"
-        [colors]="card.colors"
-        [iconUrl]="card.iconUrl"
-      ></app-stat-card>
-    </div>
+    <app-stat-card
+      *ngFor="let card of statCards"
+      [data]="card.data"
+      [colors]="card.colors"
+      [iconUrl]="card.iconUrl"
+      [loading]="isLoading"
+    ></app-stat-card>
   </mat-card>
   <mat-card class="chart-card">
     <div
-      class="line-chart"
+      class="line-chart chart"
       echarts
-      [options]="chartOption"
+      [options]="lineChartOption"
+      [loading]="isLoading"
+      [autoResize]="true"
+    ></div>
+    <div
+      class="bar-chart chart"
+      echarts
+      [options]="barChartOption"
       [loading]="isLoading"
       [autoResize]="true"
     ></div>

@@ -61,7 +61,8 @@ export class CountryComponent implements OnInit {
     iconUrl: string;
   }[];
 
-  chartOption: EChartsOption;
+  lineChartOption: EChartsOption;
+  barChartOption: EChartsOption;
 
   constructor(
     private route: ActivatedRoute,
@@ -85,7 +86,7 @@ export class CountryComponent implements OnInit {
         this.isLoading = false;
         this.statCards = this.generateCardData();
         this.countryControl.setValue(this.countryData.name); // Set the value for country picker
-        this.chartOption = this.generateChartOptions();
+        this.generateChartOptions();
       });
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
@@ -101,7 +102,8 @@ export class CountryComponent implements OnInit {
 
   // creates options for chart
   generateChartOptions() {
-    return (this.chartOption = {
+    // Line chart
+    this.lineChartOption = {
       xAxis: {
         type: 'category',
         data: this._timelineOnChart(), // dates from timeline data
@@ -142,14 +144,31 @@ export class CountryComponent implements OnInit {
           color: this.statCards[2].colors.primary,
         },
       ],
-    });
+    };
+
+    this.barChartOption = {
+      xAxis: {
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      },
+      yAxis: {},
+      series: [
+        {
+          type: 'bar',
+          data: [23, 24, 18, 25, 27, 28, 25],
+        },
+        {
+          type: 'bar',
+          data: [26, 24, 18, 22, 23, 20, 27],
+        },
+      ],
+    };
   }
 
   // generate an array from values of specified property on timeline data
   private _caseArrayTimeline(property: string) {
     const caseArray = [];
     for (let item of this.timelineData) {
-      caseArray.unshift(item[property]);
+      caseArray.unshift(item[property]); // Reversed, from oldest to newest needed
     }
     return caseArray;
   }

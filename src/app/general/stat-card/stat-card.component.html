@@ -1,11 +1,14 @@
 <mat-card [style.backgroundColor]="colors.primary">
-  <div class="card-stat" *ngFor="let stat of data.stats">
-    <mat-card-subtitle [style.color]="colors.accent">
-      {{ stat.name }}:
-    </mat-card-subtitle>
-    <p>{{ stat.value }}</p>
+  <mat-spinner *ngIf="loading"></mat-spinner>
+  <div *ngIf="!loading">
+    <div class="card-stat" *ngFor="let stat of data.stats">
+      <mat-card-subtitle [style.color]="colors.accent">
+        {{ stat.name }}:
+      </mat-card-subtitle>
+      <p>{{ stat.value }}</p>
+    </div>
+    <mat-card-title [style.color]="colors.accent">
+      <img [src]="iconUrl" [alt]="data.title" /> {{ data.title }}
+    </mat-card-title>
   </div>
-  <mat-card-title [style.color]="colors.accent">
-    <img [src]="iconUrl" [alt]="data.title" /> {{ data.title }}
-  </mat-card-title>
 </mat-card>

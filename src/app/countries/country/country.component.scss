@@ -20,10 +20,11 @@ mat-spinner {
 
   .chart-card {
     flex-grow: 1;
-
-    .line-chart {
-      height: 680px;
-      width: 100%;
+    width: 100%;
+    margin: 0 24px;
+    .chart {
+      height: 340px;
+      max-width: 1500px;
     }
   }
 }

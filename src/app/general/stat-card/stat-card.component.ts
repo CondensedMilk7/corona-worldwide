@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StatCardData, StatCardColors } from '../../shared/models/stat-card.model';
+import {
+  StatCardData,
+  StatCardColors,
+} from '../../shared/models/stat-card.model';
 
 @Component({
   selector: 'app-stat-card',
@@ -10,6 +13,7 @@ export class StatCardComponent implements OnInit {
   @Input() data = new StatCardData('', [{ name: '', value: 0 }]);
   @Input() colors = new StatCardColors('', '');
   @Input() iconUrl: string = '';
+  @Input() loading: boolean = false;
 
   constructor() {}
 
