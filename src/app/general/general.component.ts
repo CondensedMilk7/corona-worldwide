@@ -41,53 +41,57 @@ export class GeneralComponent implements OnInit {
   }
 
   onDatePicked(date: string) {
-    const selectedDateData = this.data.find((item) => {
-      return item.updated_at === date;
-    });
-    this.selectedDateData = selectedDateData;
+    if (date === 'all') {
+      this.customChartOption = {};
+    } else {
+      const selectedDateData = this.data.find((item) => {
+        return item.updated_at === date;
+      });
+      this.selectedDateData = selectedDateData;
 
-    this.customChartOption = {
-      xAxis: {
-        type: 'category',
-        data: [selectedDateData.updated_at],
-      },
-      yAxis: {
-        type: 'value',
-      },
-      legend: {
-        orient: 'horizontal',
-        top: 'bottom',
-        data: ['Confirmed', 'Deaths', 'Recovered'],
-        icon: 'rect',
-      },
-      series: [
-        {
-          name: 'Confirmed',
-          data: [selectedDateData.new_confirmed],
-          type: 'line',
-          stack: 'x',
-          areaStyle: {},
-          smooth: true,
-          color: this.cardsList[0].colors.primary,
+      this.customChartOption = {
+        xAxis: {
+          type: 'category',
+          data: [selectedDateData.updated_at],
         },
-        {
-          name: 'Deaths',
-          data: [selectedDateData.new_deaths],
-          type: 'line',
-          areaStyle: {},
-          smooth: true,
-          color: this.cardsList[1].colors.primary,
+        yAxis: {
+          type: 'value',
         },
-        {
-          name: 'Recovered',
-          data: [selectedDateData.new_recovered],
-          type: 'line',
-          areaStyle: {},
-          smooth: true,
-          color: this.cardsList[2].colors.primary,
+        legend: {
+          orient: 'horizontal',
+          top: 'bottom',
+          data: ['Confirmed', 'Deaths', 'Recovered'],
+          icon: 'rect',
         },
-      ],
-    };
+        series: [
+          {
+            name: 'Confirmed',
+            data: [selectedDateData.new_confirmed],
+            type: 'line',
+            stack: 'x',
+            areaStyle: {},
+            smooth: true,
+            color: this.cardsList[0].colors.primary,
+          },
+          {
+            name: 'Deaths',
+            data: [selectedDateData.new_deaths],
+            type: 'line',
+            areaStyle: {},
+            smooth: true,
+            color: this.cardsList[1].colors.primary,
+          },
+          {
+            name: 'Recovered',
+            data: [selectedDateData.new_recovered],
+            type: 'line',
+            areaStyle: {},
+            smooth: true,
+            color: this.cardsList[2].colors.primary,
+          },
+        ],
+      };
+    }
   }
 
   // creates options for chart
