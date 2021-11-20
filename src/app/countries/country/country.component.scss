@@ -3,6 +3,9 @@ mat-spinner {
 }
 .container {
   padding-top: 20px;
+  display: flex;
+  // justify-content: center;
+  align-items: center;
 
   .card-of-cards {
     width: fit-content;
@@ -12,6 +15,15 @@ mat-spinner {
       margin-left: 8px;
       font-size: 1.2rem;
       margin: 0;
+    }
+  }
+
+  .chart-card {
+    flex-grow: 1;
+
+    .line-chart {
+      height: 680px;
+      width: 100%;
     }
   }
 }

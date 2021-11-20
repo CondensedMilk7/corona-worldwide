@@ -34,4 +34,13 @@
       ></app-stat-card>
     </div>
   </mat-card>
+  <mat-card class="chart-card">
+    <div
+      class="line-chart"
+      echarts
+      [options]="chartOption"
+      [loading]="isLoading"
+      [autoResize]="true"
+    ></div>
+  </mat-card>
 </div>

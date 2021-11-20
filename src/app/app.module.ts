@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-
+import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppComponent } from './app.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEchartsModule } from 'ngx-echarts';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -13,15 +16,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FilterPipe } from './shared/pipes/filter.pipe';
+import { DatePipe } from '@angular/common';
+
 import { GeneralComponent } from './general/general.component';
 import { CountriesComponent } from './countries/countries.component';
 import { StatCardComponent } from './general/stat-card/stat-card.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CountryComponent } from './countries/country/country.component';
-import { FilterPipe } from './shared/pipes/filter.pipe';
 import { CountriesListComponent } from './countries/countries-list/countries-list.component';
 
 @NgModule({
@@ -31,8 +32,9 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
     CountriesComponent,
     StatCardComponent,
     CountryComponent,
-    FilterPipe,
     CountriesListComponent,
+
+    FilterPipe,
   ],
   imports: [
     BrowserModule,
@@ -55,7 +57,7 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
       echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.
     }),
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

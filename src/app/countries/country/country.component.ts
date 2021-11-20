@@ -8,7 +8,10 @@ import {
   StatCardData,
 } from 'src/app/shared/models/stat-card.model';
 import { CountryData } from 'src/app/shared/models/country-data.model';
+import { TimelineData } from 'src/app/shared/models/timeline-data.model';
 import { StatService } from 'src/app/shared/stat.service';
+import { EChartsOption } from 'echarts';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-country',
@@ -45,6 +48,9 @@ export class CountryComponent implements OnInit {
     },
     timeline: [],
   };
+
+  timelineData: TimelineData[]; // extracted from country data for the sake of readability
+
   countryList: { name: string; code: string }[];
   countryControl = new FormControl();
   filteredOptions: Observable<{ name: string; code: string }[]>;
@@ -55,10 +61,13 @@ export class CountryComponent implements OnInit {
     iconUrl: string;
   }[];
 
+  chartOption: EChartsOption;
+
   constructor(
     private route: ActivatedRoute,
     private statService: StatService,
-    private router: Router
+    private router: Router,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -72,9 +81,11 @@ export class CountryComponent implements OnInit {
       )
       .subscribe((countryData) => {
         this.countryData = countryData;
+        this.timelineData = countryData.timeline;
         this.isLoading = false;
         this.statCards = this.generateCardData();
-        this.countryControl.setValue(this.countryData.name);
+        this.countryControl.setValue(this.countryData.name); // Set the value for country picker
+        this.chartOption = this.generateChartOptions();
       });
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
@@ -86,6 +97,70 @@ export class CountryComponent implements OnInit {
         map((value) => this._filter(value))
       );
     });
+  }
+
+  // creates options for chart
+  generateChartOptions() {
+    return (this.chartOption = {
+      xAxis: {
+        type: 'category',
+        data: this._timelineOnChart(), // dates from timeline data
+      },
+      yAxis: {
+        type: 'value',
+      },
+      legend: {
+        orient: 'horizontal',
+        top: 'bottom',
+        data: ['Confirmed', 'Deaths', 'Recovered'],
+        icon: 'rect',
+      },
+      series: [
+        {
+          name: 'Confirmed',
+          data: this._caseArrayTimeline('confirmed'),
+          type: 'line',
+          stack: 'x',
+          areaStyle: {},
+          smooth: true,
+          color: this.statCards[0].colors.primary,
+        },
+        {
+          name: 'Deaths',
+          data: this._caseArrayTimeline('deaths'),
+          type: 'line',
+          areaStyle: {},
+          smooth: true,
+          color: this.statCards[1].colors.primary,
+        },
+        {
+          name: 'Recovered',
+          data: this._caseArrayTimeline('recovered'),
+          type: 'line',
+          areaStyle: {},
+          smooth: true,
+          color: this.statCards[2].colors.primary,
+        },
+      ],
+    });
+  }
+
+  // generate an array from values of specified property on timeline data
+  private _caseArrayTimeline(property: string) {
+    const caseArray = [];
+    for (let item of this.timelineData) {
+      caseArray.unshift(item[property]);
+    }
+    return caseArray;
+  }
+
+  // Generate array of date strings to display on chart's X axis
+  private _timelineOnChart(): string[] {
+    const timelineArr = [];
+    for (let item of this.timelineData) {
+      timelineArr.unshift(this.datePipe.transform(item.updated_at)); // Reversed so that it's from oldest to newest
+    }
+    return timelineArr;
   }
 
   onChangeCountry(country: { name: string; code: string }) {
@@ -120,7 +195,7 @@ export class CountryComponent implements OnInit {
             ),
           },
           {
-            name: 'case per million',
+            name: 'per million',
             value:
               this.countryData.latest_data.calculated
                 .cases_per_million_population /
