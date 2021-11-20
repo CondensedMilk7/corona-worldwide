@@ -24,8 +24,8 @@ export class GeneralComponent implements OnInit {
   }[] = [];
 
   chartOption: EChartsOption = {};
-  dateOptions: string[] = [];
-  selectedDateData: TimelineData;
+  dateOptions: Set<string>;
+  selectedDateData: TimelineData[];
   customChartOption: EChartsOption = {};
 
   constructor(private statService: StatService, private datePipe: DatePipe) {}
@@ -42,29 +42,38 @@ export class GeneralComponent implements OnInit {
 
   onDatePicked(date: string) {
     if (date === 'all') {
-      this.customChartOption = {};
+      this.customChartOption = this.chartOption;
     } else {
-      const selectedDateData = this.data.find((item) => {
-        return item.updated_at === date;
+      const month = date.split(' ')[0];
+      const year = date.split(' ')[1];
+      const selectedDateData = this.data.filter((item) => {
+        const itemDate = this.datePipe.transform(item.updated_at);
+        return itemDate.includes(month) && itemDate.includes(year);
       });
       this.selectedDateData = selectedDateData;
 
       this.customChartOption = {
         xAxis: {
-          data: [selectedDateData.updated_at],
+          data: this._timelineOnChart(this.selectedDateData),
         },
         series: [
           {
             name: 'Confirmed',
-            data: [selectedDateData.new_confirmed],
+            data: this._caseArrayTimeline(
+              'new_confirmed',
+              this.selectedDateData
+            ),
           },
           {
             name: 'Deaths',
-            data: [selectedDateData.new_deaths],
+            data: this._caseArrayTimeline('new_deaths', this.selectedDateData),
           },
           {
             name: 'Recovered',
-            data: [selectedDateData.new_recovered],
+            data: this._caseArrayTimeline(
+              'new_recovered',
+              this.selectedDateData
+            ),
           },
         ],
       };
@@ -76,7 +85,7 @@ export class GeneralComponent implements OnInit {
     this.chartOption = {
       xAxis: {
         type: 'category',
-        data: this._timelineOnChart(),
+        data: this._timelineOnChart(this.data),
       },
       yAxis: {
         type: 'value',
@@ -90,7 +99,7 @@ export class GeneralComponent implements OnInit {
       series: [
         {
           name: 'Confirmed',
-          data: this._caseArrayTimeline('confirmed'),
+          data: this._caseArrayTimeline('confirmed', this.data),
           type: 'line',
           stack: 'x',
           areaStyle: {},
@@ -99,7 +108,7 @@ export class GeneralComponent implements OnInit {
         },
         {
           name: 'Deaths',
-          data: this._caseArrayTimeline('deaths'),
+          data: this._caseArrayTimeline('deaths', this.data),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -107,7 +116,7 @@ export class GeneralComponent implements OnInit {
         },
         {
           name: 'Recovered',
-          data: this._caseArrayTimeline('recovered'),
+          data: this._caseArrayTimeline('recovered', this.data),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -152,26 +161,30 @@ export class GeneralComponent implements OnInit {
   }
 
   // Generates list of dates that can be picked on the chart to display data for that date
+  // A single date consists of a month and year, ex. "Nov 2021".
   generateDateOptions() {
-    const dateList = [];
+    const dateList = new Set<string>();
     for (let item of this.data) {
-      dateList.unshift(item.updated_at); // Will only be piped trough date pipe for visuals
+      const date = this.datePipe.transform(item.updated_at).split(' ');
+      const monthAndYear = date[0] + ' ' + date[2];
+      dateList.add(monthAndYear);
     }
     this.dateOptions = dateList;
   }
 
-  private _caseArrayTimeline(property: string) {
+  private _caseArrayTimeline(property: string, data: TimelineData[]) {
     const caseArray = [];
-    for (let item of this.data) {
+    for (let item of data) {
       caseArray.unshift(item[property]); // Reversed, from oldest to newest needed
     }
     return caseArray;
   }
 
   // Generate array of date strings to display on chart's X axis
-  private _timelineOnChart(): string[] {
+  // Takes input as it is reused when creating new chart data based on date picked
+  private _timelineOnChart(data: TimelineData[]): string[] {
     const timelineArr = [];
-    for (let item of this.data) {
+    for (let item of data) {
       timelineArr.unshift(this.datePipe.transform(item.updated_at)); // Reversed so that it's from oldest to newest
     }
     return timelineArr;
