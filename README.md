@@ -1,29 +1,23 @@
 # CoronaWorldwide
+![Screenshot 2021-11-21 at 18-13-24 CoronaWorldwide](https://user-images.githubusercontent.com/82287873/142766742-7b629605-ea7d-4f29-b994-2c4df4a222b6.png)
 
-This corona API (https://corona-api.com/) is terribly messy and it's driving me crazy.
+## Preview Live Website
+[Click here to preview deployed site](https://gallant-thompson-f6451b.netlify.app/general)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.4.
+## About
+This is an app based on 
+[challenge](https://gist.github.com/giorgobiani/fdabffe1c745f2e3c9913a5f79a4fdc9) provided for 
+[BitCamp](https://www.bitcamp.ge/).
+The challenge has been quite fun, but at times frustrating. The API is very inconssistent and the challenge instructions are at times unclear. Nevertheless,
+it was worth a try, especially because I have never used echarts before.
 
-## Development server
+### Features
+* Routing;
+* Dynamic data displayed on charts based on user input;
+* Color theme switch;
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Tools
+* Angular (framework)
+* Angular Material (visuals, animations and components)
+* ngx-echarts (Apache Echarts)
+* corona-api.com (API)
