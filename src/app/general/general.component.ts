@@ -69,7 +69,7 @@ export class GeneralComponent implements OnInit, OnDestroy {
 
     // Listen for them change
     this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
-      if (isDark) {
+      if (isDark === 'true') {
         this.chartTheme = 'dark';
       } else {
         this.chartTheme = '';

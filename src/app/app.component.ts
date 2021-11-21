@@ -42,7 +42,8 @@ export class AppComponent implements OnInit {
   onThemeSwitched({ checked }: MatSlideToggleChange) {
     this.isDark = checked;
     this.themeService.switchTheme(this.isDark);
-    localStorage.setItem('isDark', 'true');
+    if (checked) localStorage.setItem('isDark', 'true');
+    if (!checked) localStorage.setItem('isDark', 'false');
     this.hostClass = this.isDark ? 'theme-dark' : 'theme-light';
     this.renderer.setAttribute(this.document.body, 'class', this.hostClass);
   }

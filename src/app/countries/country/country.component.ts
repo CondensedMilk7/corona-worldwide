@@ -123,7 +123,7 @@ export class CountryComponent implements OnInit, OnDestroy {
 
     // Set chart theme
     const isDark = localStorage.getItem('isDark');
-    if (isDark) this.chartTheme = 'dark';
+    if (isDark === 'true') this.chartTheme = 'dark';
 
     // Listen for theme change
     this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
