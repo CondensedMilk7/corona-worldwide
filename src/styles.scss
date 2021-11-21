@@ -1,10 +1,55 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+// Define a light theme
+$light-primary: mat.define-palette(mat.$indigo-palette);
+$light-accent: mat.define-palette(mat.$pink-palette);
+$light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $light-primary,
+      accent: $light-accent,
+    ),
+  )
+);
+
+// Define a dark theme
+$dark-primary: mat.define-palette(mat.$purple-palette);
+$dark-accent: mat.define-palette(mat.$green-palette);
+$dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $dark-primary,
+      accent: $dark-accent,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+
+.theme-dark {
+  @include mat.all-component-themes($dark-theme);
+  // @include mat.core-theme($dark-theme);
+  // @include mat.core-color($dark-theme);
+  // @include mat.button-color($dark-theme);
+}
+
+.theme-light {
+  @include mat.all-component-themes($light-theme);
+  // @include mat.core-theme($dark-theme);
+  // @include mat.core-color($light-theme);
+  // @include mat.button-color($light-theme);
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 html,
 body {
   height: 100%;

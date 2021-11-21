@@ -1,3 +1,10 @@
+html,
+body,
+app-root,
+.app-frame {
+  height: 100%;
+}
+
 mat-toolbar {
   display: flex;
   align-items: center;
@@ -9,6 +16,11 @@ mat-toolbar {
 
   .spacer {
     flex-grow: 1;
+  }
+
+  .theme-switch {
+    font-size: 1rem;
+    margin-right: 8px;
   }
 
   .active {
