@@ -41,7 +41,7 @@ export class StatService {
       );
   }
 
-  // get data
+  // get data for specific country
   getCountryData(countryCode: string) {
     return this.http
       .get<{ data: CountryData; _cacheHit: boolean }>(

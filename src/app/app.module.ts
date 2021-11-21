@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { FilterPipe } from './shared/pipes/filter.pipe';
 import { DatePipe } from '@angular/common';
@@ -54,6 +55,7 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
     MatProgressSpinnerModule,
     MatAutocompleteModule,
     MatSelectModule,
+    MatMenuModule,
 
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.

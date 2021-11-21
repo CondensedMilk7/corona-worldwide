@@ -20,8 +20,12 @@
   >
     Countries
   </button>
-  <button class="menu" mat-icon-button>
+  <button class="menu" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
   </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/general">General</button>
+    <button mat-menu-item routerLink="/countries">Countries</button>
+  </mat-menu>
 </mat-toolbar>
 <router-outlet></router-outlet>
