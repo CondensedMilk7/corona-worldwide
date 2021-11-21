@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { TimelineData } from '../shared/models/timeline-data.model';
-import { StatService } from '../shared/stat.service';
+import { StatService } from '../shared/services/stat.service';
 import { StatCardData, StatCardColors } from '../shared/models/stat-card.model';
 import { DatePipe } from '@angular/common';
+import { UtilService } from '../shared/services/util.service';
 
 @Component({
   selector: 'app-general',
@@ -28,7 +29,11 @@ export class GeneralComponent implements OnInit {
   selectedDateData: TimelineData[];
   customChartOption: EChartsOption = {};
 
-  constructor(private statService: StatService, private datePipe: DatePipe) {}
+  constructor(
+    private statService: StatService,
+    private datePipe: DatePipe,
+    private utilService: UtilService
+  ) {}
 
   ngOnInit(): void {
     this.statService.getGlobal().subscribe((data) => {
@@ -54,7 +59,7 @@ export class GeneralComponent implements OnInit {
 
       this.customChartOption = {
         xAxis: {
-          data: this._timelineOnChart(this.selectedDateData),
+          data: this.utilService.timelineOnChart(this.selectedDateData),
         },
         legend: {
           data: ['Confirmed', 'Deaths', 'Recovered'],
@@ -62,18 +67,21 @@ export class GeneralComponent implements OnInit {
         series: [
           {
             name: 'Confirmed',
-            data: this._caseArrayTimeline(
+            data: this.utilService.caseArrayTimeline(
               'new_confirmed',
               this.selectedDateData
             ),
           },
           {
             name: 'Deaths',
-            data: this._caseArrayTimeline('new_deaths', this.selectedDateData),
+            data: this.utilService.caseArrayTimeline(
+              'new_deaths',
+              this.selectedDateData
+            ),
           },
           {
             name: 'Recovered',
-            data: this._caseArrayTimeline(
+            data: this.utilService.caseArrayTimeline(
               'new_recovered',
               this.selectedDateData
             ),
@@ -88,7 +96,7 @@ export class GeneralComponent implements OnInit {
     this.chartOption = {
       xAxis: {
         type: 'category',
-        data: this._timelineOnChart(this.data),
+        data: this.utilService.timelineOnChart(this.data),
       },
       yAxis: {
         type: 'value',
@@ -102,7 +110,7 @@ export class GeneralComponent implements OnInit {
       series: [
         {
           name: 'Active',
-          data: this._caseArrayTimeline('active', this.data),
+          data: this.utilService.caseArrayTimeline('active', this.data),
           type: 'line',
           stack: 'x',
           areaStyle: {},
@@ -111,7 +119,7 @@ export class GeneralComponent implements OnInit {
         },
         {
           name: 'Deaths',
-          data: this._caseArrayTimeline('deaths', this.data),
+          data: this.utilService.caseArrayTimeline('deaths', this.data),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -119,7 +127,7 @@ export class GeneralComponent implements OnInit {
         },
         {
           name: 'Recovered',
-          data: this._caseArrayTimeline('recovered', this.data),
+          data: this.utilService.caseArrayTimeline('recovered', this.data),
           type: 'line',
           // areaStyle: {},
           smooth: true,
@@ -173,23 +181,5 @@ export class GeneralComponent implements OnInit {
       dateList.add(monthAndYear);
     }
     this.dateOptions = dateList;
-  }
-
-  private _caseArrayTimeline(property: string, data: TimelineData[]) {
-    const caseArray = [];
-    for (let item of data) {
-      caseArray.unshift(item[property]); // Reversed, from oldest to newest needed
-    }
-    return caseArray;
-  }
-
-  // Generate array of date strings to display on chart's X axis
-  // Takes input as it is reused when creating new chart data based on date picked
-  private _timelineOnChart(data: TimelineData[]): string[] {
-    const timelineArr = [];
-    for (let item of data) {
-      timelineArr.unshift(this.datePipe.transform(item.updated_at)); // Reversed so that it's from oldest to newest
-    }
-    return timelineArr;
   }
 }

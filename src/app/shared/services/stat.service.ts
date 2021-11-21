@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { TimelineData } from './models/timeline-data.model';
-import { CountryData } from './models/country-data.model';
+import { TimelineData } from '../models/timeline-data.model';
+import { CountryData } from '../models/country-data.model';
 
 @Injectable({ providedIn: 'root' })
 export class StatService {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { StatService } from 'src/app/shared/stat.service';
+import { StatService } from 'src/app/shared/services/stat.service';
 
 @Component({
   selector: 'app-countries-list',

@@ -9,9 +9,10 @@ import {
 } from 'src/app/shared/models/stat-card.model';
 import { CountryData } from 'src/app/shared/models/country-data.model';
 import { TimelineData } from 'src/app/shared/models/timeline-data.model';
-import { StatService } from 'src/app/shared/stat.service';
+import { StatService } from 'src/app/shared/services/stat.service';
 import { EChartsOption } from 'echarts';
 import { DatePipe } from '@angular/common';
+import { UtilService } from 'src/app/shared/services/util.service';
 
 @Component({
   selector: 'app-country',
@@ -70,7 +71,8 @@ export class CountryComponent implements OnInit {
     private route: ActivatedRoute,
     private statService: StatService,
     private router: Router,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private utilService: UtilService
   ) {}
 
   ngOnInit(): void {
@@ -121,22 +123,22 @@ export class CountryComponent implements OnInit {
       });
       this.customLineChartOption = {
         xAxis: {
-          data: this._timelineOnChart(data),
+          data: this.utilService.timelineOnChart(data),
         },
         series: [
-          { data: this._caseArrayTimeline('confirmed', data) },
-          { data: this._caseArrayTimeline('deaths', data) },
-          { data: this._caseArrayTimeline('recovered', data) },
+          { data: this.utilService.caseArrayTimeline('confirmed', data) },
+          { data: this.utilService.caseArrayTimeline('deaths', data) },
+          { data: this.utilService.caseArrayTimeline('recovered', data) },
         ],
       };
       this.customBarChartOption = {
         xAxis: {
-          data: this._timelineOnChart(data),
+          data: this.utilService.timelineOnChart(data),
         },
         series: [
-          { data: this._caseArrayTimeline('new_confirmed', data) },
-          { data: this._caseArrayTimeline('new_deaths', data) },
-          { data: this._caseArrayTimeline('new_recovered', data) },
+          { data: this.utilService.caseArrayTimeline('new_confirmed', data) },
+          { data: this.utilService.caseArrayTimeline('new_deaths', data) },
+          { data: this.utilService.caseArrayTimeline('new_recovered', data) },
         ],
       };
     }
@@ -148,7 +150,7 @@ export class CountryComponent implements OnInit {
     this.lineChartOption = {
       xAxis: {
         type: 'category',
-        data: this._timelineOnChart(this.timelineData), // dates from timeline data
+        data: this.utilService.timelineOnChart(this.timelineData), // dates from timeline data
       },
       yAxis: {
         type: 'value',
@@ -162,7 +164,10 @@ export class CountryComponent implements OnInit {
       series: [
         {
           name: 'Confirmed',
-          data: this._caseArrayTimeline('confirmed', this.timelineData),
+          data: this.utilService.caseArrayTimeline(
+            'confirmed',
+            this.timelineData
+          ),
           type: 'line',
           stack: 'x',
           areaStyle: {},
@@ -171,7 +176,7 @@ export class CountryComponent implements OnInit {
         },
         {
           name: 'Deaths',
-          data: this._caseArrayTimeline('deaths', this.timelineData),
+          data: this.utilService.caseArrayTimeline('deaths', this.timelineData),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -179,7 +184,10 @@ export class CountryComponent implements OnInit {
         },
         {
           name: 'Recovered',
-          data: this._caseArrayTimeline('recovered', this.timelineData),
+          data: this.utilService.caseArrayTimeline(
+            'recovered',
+            this.timelineData
+          ),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -190,25 +198,34 @@ export class CountryComponent implements OnInit {
 
     this.barChartOption = {
       xAxis: {
-        data: this._timelineOnChart(this.timelineData),
+        data: this.utilService.timelineOnChart(this.timelineData),
       },
       yAxis: {},
       series: [
         {
           name: 'Confirmed',
-          data: this._caseArrayTimeline('new_confirmed', this.timelineData),
+          data: this.utilService.caseArrayTimeline(
+            'new_confirmed',
+            this.timelineData
+          ),
           type: 'bar',
           color: this.statCards[0].colors.primary,
         },
         {
           name: 'Deaths',
-          data: this._caseArrayTimeline('new_deaths', this.timelineData),
+          data: this.utilService.caseArrayTimeline(
+            'new_deaths',
+            this.timelineData
+          ),
           type: 'bar',
           color: this.statCards[1].colors.primary,
         },
         {
           name: 'Recovered',
-          data: this._caseArrayTimeline('new_recovered', this.timelineData),
+          data: this.utilService.caseArrayTimeline(
+            'new_recovered',
+            this.timelineData
+          ),
           type: 'bar',
           color: this.statCards[2].colors.primary,
         },
@@ -251,25 +268,6 @@ export class CountryComponent implements OnInit {
     return last3Months;
   }
 
-  // TODO: Make all this reusable. It is repeated in general component
-  // generate an array from values of specified property on timeline data
-  private _caseArrayTimeline(property: string, data: TimelineData[]) {
-    const caseArray = [];
-    for (let item of data) {
-      caseArray.unshift(item[property]); // Reversed, from oldest to newest needed
-    }
-    return caseArray;
-  }
-
-  // Generate array of date strings to display on chart's X axis
-  private _timelineOnChart(data: TimelineData[]): string[] {
-    const timelineArr = [];
-    for (let item of data) {
-      timelineArr.unshift(this.datePipe.transform(item.updated_at)); // Reversed so that it's from oldest to newest
-    }
-    return timelineArr;
-  }
-
   onChangeCountry(country: { name: string; code: string }) {
     this.router.navigate([`/countries/${country.code}/${country.name}`]);
   }
@@ -296,7 +294,7 @@ export class CountryComponent implements OnInit {
             name: 'new today',
             // value: this.countryData.timeline[0].new_confirmed,
             // value: this.countryData.today.confirmed,
-            value: this._avoidZero(
+            value: this.utilService.avoidZero(
               this.countryData.today.confirmed,
               this.countryData.timeline[0].new_confirmed
             ),
@@ -321,7 +319,7 @@ export class CountryComponent implements OnInit {
             name: 'new today',
             // value: this.countryData.timeline[0].new_deaths
             // value: this.countryData.today.deaths,
-            value: this._avoidZero(
+            value: this.utilService.avoidZero(
               this.countryData.timeline[0].new_deaths,
               this.countryData.today.deaths
             ),
@@ -355,15 +353,5 @@ export class CountryComponent implements OnInit {
         iconUrl: '../../assets/icons/heart-solid.svg',
       },
     ];
-  }
-
-  // This is what I have to do to work around this STUPID, DUMBFOUNDED, ABSOULUTELIY ATROCIUS, INCONSSISTENT API
-  // Takes in numbers and returns whichever is not zero. IF THEY ARE ALL GOD DAMN ZERO THEN IT RETURNS ZERO.
-  private _avoidZero(...args: number[]) {
-    let nonZeroVal = 0;
-    for (let value of args) {
-      if (value !== 0) nonZeroVal = value;
-    }
-    return nonZeroVal;
   }
 }
