@@ -65,11 +65,11 @@ export class GeneralComponent implements OnInit, OnDestroy {
 
     // Set chart theme
     const isDark = localStorage.getItem('isDark');
-    if (isDark) this.chartTheme = 'dark';
+    if (isDark === 'true') this.chartTheme = 'dark';
 
     // Listen for them change
     this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
-      if (isDark === 'true') {
+      if (isDark) {
         this.chartTheme = 'dark';
       } else {
         this.chartTheme = '';
