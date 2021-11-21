@@ -24,16 +24,18 @@
       <p>Population: {{ countryData.population }}</p>
       <p>Data updated at: {{ countryData.updated_at | date }}</p>
     </div>
-    <app-stat-card
-      *ngFor="let card of statCards"
-      [data]="card.data"
-      [colors]="card.colors"
-      [iconUrl]="card.iconUrl"
-      [loading]="isLoading"
-    ></app-stat-card>
+    <div class="stat-cards">
+      <app-stat-card
+        *ngFor="let card of statCards"
+        [data]="card.data"
+        [colors]="card.colors"
+        [iconUrl]="card.iconUrl"
+        [loading]="isLoading"
+      ></app-stat-card>
+    </div>
   </mat-card>
   <mat-card class="chart-card">
-    <div class="chart-card-header" >
+    <div class="chart-card-header">
       <mat-card-title>Total cases</mat-card-title>
       <mat-form-field>
         <mat-label>Select Date</mat-label>
