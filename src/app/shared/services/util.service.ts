@@ -7,7 +7,6 @@ export class UtilService {
   constructor(private datePipe: DatePipe) {}
 
   // Generate array of date strings to display on chart's X axis
-  // Takes input as it is reused when creating new chart data based on date picked
   timelineOnChart(data: TimelineData[]): string[] {
     const timelineArr = [];
     for (let item of data) {

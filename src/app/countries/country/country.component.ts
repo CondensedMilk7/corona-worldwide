@@ -13,6 +13,7 @@ import { StatService } from 'src/app/shared/services/stat.service';
 import { EChartsOption } from 'echarts';
 import { DatePipe } from '@angular/common';
 import { UtilService } from 'src/app/shared/services/util.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-country',
@@ -21,6 +22,7 @@ import { UtilService } from 'src/app/shared/services/util.service';
 })
 export class CountryComponent implements OnInit {
   isLoading = true;
+  isError = false;
   // Listing this all out to prevent errors in console: cannot read countryData.name in the template!
   countryData: CountryData = {
     name: '',
@@ -72,7 +74,8 @@ export class CountryComponent implements OnInit {
     private statService: StatService,
     private router: Router,
     private datePipe: DatePipe,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -85,14 +88,24 @@ export class CountryComponent implements OnInit {
           return this.statService.getCountryData(code);
         })
       )
-      .subscribe((countryData) => {
-        this.countryData = countryData;
-        this.timelineData = countryData.timeline;
-        this.statCards = this.generateCardData();
-        this.countryControl.setValue(this.countryData.name); // Set the value for country picker
-        this.generateChartOptions();
-        this.isLoading = false;
-      });
+      .subscribe(
+        (countryData) => {
+          this.countryData = countryData;
+          this.timelineData = countryData.timeline;
+          this.statCards = this.generateCardData();
+          this.countryControl.setValue(this.countryData.name); // Set the value for country picker
+          this.generateChartOptions();
+          this.isLoading = false;
+        },
+        (error) => {
+          this.isError = true;
+          console.log(error);
+          this._snackBar.open(
+            'An error has occured!: ' + error.message,
+            'Dismiss'
+          );
+        }
+      );
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
       this.countryList = data;

@@ -5,6 +5,7 @@ import { StatService } from '../shared/services/stat.service';
 import { StatCardData, StatCardColors } from '../shared/models/stat-card.model';
 import { DatePipe } from '@angular/common';
 import { UtilService } from '../shared/services/util.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-general',
@@ -16,6 +17,7 @@ export class GeneralComponent implements OnInit {
   isError = false;
 
   data: TimelineData[] = [];
+  updatedAt = '';
 
   // iterable list of data for each card (in case I need to add more cards)
   cardsList: {
@@ -32,17 +34,30 @@ export class GeneralComponent implements OnInit {
   constructor(
     private statService: StatService,
     private datePipe: DatePipe,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.statService.getGlobal().subscribe((data) => {
-      this.data = data;
-      this.isLoading = false;
-      this.cardsList = this.generateCardData();
-      this.generateChartOptions();
-      this.generateDateOptions();
-    });
+    this.statService.getGlobal().subscribe(
+      (data) => {
+        this.data = data;
+        this.updatedAt = this.data[0].updated_at;
+        this.isLoading = false;
+        this.cardsList = this.generateCardData();
+        this.generateChartOptions();
+        this.generateDateOptions();
+      },
+      (error) => {
+        this.isError = true;
+        console.log(error);
+        this.openSnackBar('An error has occured: ' + error.message, 'Dismiss');
+      }
+    );
+  }
+
+  openSnackBar(message: string, action?: string) {
+    this._snackBar.open(message, action);
   }
 
   onDatePicked(date: string) {
@@ -129,7 +144,7 @@ export class GeneralComponent implements OnInit {
           name: 'Recovered',
           data: this.utilService.caseArrayTimeline('recovered', this.data),
           type: 'line',
-          // areaStyle: {},
+          // areaStyle: {}, // Without this it looks exactly like the dashboard of api page
           smooth: true,
           color: this.cardsList[2].colors.primary,
         },

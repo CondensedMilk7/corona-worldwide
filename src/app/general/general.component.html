@@ -1,12 +1,9 @@
 <h1>Global Statistics</h1>
-<mat-spinner *ngIf="isLoading"></mat-spinner>
-<div class="container" *ngIf="!isLoading">
+<div class="container" *ngIf="!isError">
   <mat-card class="cards">
     <div class="update-date">
       <mat-card-title>Updated at:</mat-card-title>
-      <mat-card-title class="date">{{
-        data[0].updated_at | date
-      }}</mat-card-title>
+      <mat-card-title class="date">{{ updatedAt | date }}</mat-card-title>
     </div>
     <mat-divider></mat-divider>
     <div class="cards__stats">
@@ -15,6 +12,7 @@
         [data]="card.data"
         [colors]="card.colors"
         [iconUrl]="card.iconUrl"
+        [loading]="isLoading"
       ></app-stat-card>
     </div>
   </mat-card>
