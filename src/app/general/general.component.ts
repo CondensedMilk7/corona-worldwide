@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { TimelineData } from '../shared/models/timeline-data.model';
 import { StatService } from '../shared/services/stat.service';
@@ -6,13 +6,15 @@ import { StatCardData, StatCardColors } from '../shared/models/stat-card.model';
 import { DatePipe } from '@angular/common';
 import { UtilService } from '../shared/services/util.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ThemeService } from '../shared/services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-general',
   templateUrl: './general.component.html',
   styleUrls: ['./general.component.scss'],
 })
-export class GeneralComponent implements OnInit {
+export class GeneralComponent implements OnInit, OnDestroy {
   isLoading = true;
   isError = false;
 
@@ -30,12 +32,15 @@ export class GeneralComponent implements OnInit {
   dateOptions: Set<string>;
   selectedDateData: TimelineData[];
   customChartOption: EChartsOption = {};
+  chartTheme = '';
+  chartThemeSub = new Subscription();
 
   constructor(
     private statService: StatService,
     private datePipe: DatePipe,
     private utilService: UtilService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -51,13 +56,25 @@ export class GeneralComponent implements OnInit {
       (error) => {
         this.isError = true;
         console.log(error);
-        this.openSnackBar('An error has occured: ' + error.message, 'Dismiss');
+        this._snackBar.open(
+          'An error has occured: ' + error.message,
+          'Dismiss'
+        );
       }
     );
-  }
 
-  openSnackBar(message: string, action?: string) {
-    this._snackBar.open(message, action);
+    // Set chart theme
+    const isDark = localStorage.getItem('isDark');
+    if (isDark) this.chartTheme = 'dark';
+
+    // Listen for them change
+    this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
+      if (isDark) {
+        this.chartTheme = 'dark';
+      } else {
+        this.chartTheme = '';
+      }
+    });
   }
 
   onDatePicked(date: string) {
@@ -196,5 +213,9 @@ export class GeneralComponent implements OnInit {
       dateList.add(monthAndYear);
     }
     this.dateOptions = dateList;
+  }
+
+  ngOnDestroy() {
+    this.chartThemeSub.unsubscribe();
   }
 }

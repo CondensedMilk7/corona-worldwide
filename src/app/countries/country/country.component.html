@@ -58,14 +58,17 @@
       [options]="lineChartOption"
       [loading]="isLoading"
       [merge]="customLineChartOption"
+      [theme]="chartTheme"
     ></div>
-    <mat-card-title>Cases daily</mat-card-title>
+    <!-- dirty fix -->
+    <mat-card-title style="margin-top: 8px">Cases daily</mat-card-title>
     <div
       class="bar-chart chart"
       echarts
       [options]="barChartOption"
       [loading]="isLoading"
       [merge]="customBarChartOption"
+      [theme]="chartTheme"
     ></div>
   </mat-card>
 </div>

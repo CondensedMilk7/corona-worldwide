@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap, startWith, map } from 'rxjs/operators';
 import {
   StatCardColors,
@@ -14,13 +14,14 @@ import { EChartsOption } from 'echarts';
 import { DatePipe } from '@angular/common';
 import { UtilService } from 'src/app/shared/services/util.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ThemeService } from 'src/app/shared/services/theme.service';
 
 @Component({
   selector: 'app-country',
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss'],
 })
-export class CountryComponent implements OnInit {
+export class CountryComponent implements OnInit, OnDestroy {
   isLoading = true;
   isError = false;
   // Listing this all out to prevent errors in console: cannot read countryData.name in the template!
@@ -68,6 +69,8 @@ export class CountryComponent implements OnInit {
   barChartOption: EChartsOption;
   customLineChartOption: EChartsOption;
   customBarChartOption: EChartsOption;
+  chartTheme = '';
+  chartThemeSub = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
@@ -75,7 +78,8 @@ export class CountryComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private utilService: UtilService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -115,6 +119,19 @@ export class CountryComponent implements OnInit {
         startWith(''),
         map((value) => this._filter(value))
       );
+    });
+
+    // Set chart theme
+    const isDark = localStorage.getItem('isDark');
+    if (isDark) this.chartTheme = 'dark';
+
+    // Listen for theme change
+    this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
+      if (isDark) {
+        this.chartTheme = 'dark';
+      } else {
+        this.chartTheme = '';
+      }
     });
   }
 
@@ -366,5 +383,9 @@ export class CountryComponent implements OnInit {
         iconUrl: '../../assets/icons/heart-solid.svg',
       },
     ];
+  }
+
+  ngOnDestroy() {
+    this.chartThemeSub.unsubscribe();
   }
 }
