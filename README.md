@@ -4,7 +4,7 @@
 ## Preview Live Website
 [Click here to preview deployed site](https://gallant-thompson-f6451b.netlify.app/)
 
-The routing has some issues on the deployed site. I might fix this, among other things, later.
+The routing has some issues on the deployed site. I might fix this later, among other things like poor responsiveness on charts.
 
 ## About
 This is an app based on 
