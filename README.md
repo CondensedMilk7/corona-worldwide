@@ -2,7 +2,9 @@
 ![Screenshot 2021-11-21 at 18-13-24 CoronaWorldwide](https://user-images.githubusercontent.com/82287873/142766742-7b629605-ea7d-4f29-b994-2c4df4a222b6.png)
 
 ## Preview Live Website
-[Click here to preview deployed site](https://gallant-thompson-f6451b.netlify.app/general)
+[Click here to preview deployed site](https://gallant-thompson-f6451b.netlify.app/)
+
+The routing has some issues on the deployed site. I might fix this, among other things, later.
 
 ## About
 This is an app based on 
