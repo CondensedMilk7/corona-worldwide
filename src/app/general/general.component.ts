@@ -56,6 +56,9 @@ export class GeneralComponent implements OnInit {
         xAxis: {
           data: this._timelineOnChart(this.selectedDateData),
         },
+        legend: {
+          data: ['Confirmed', 'Deaths', 'Recovered'],
+        },
         series: [
           {
             name: 'Confirmed',
@@ -93,13 +96,13 @@ export class GeneralComponent implements OnInit {
       legend: {
         orient: 'horizontal',
         top: 'bottom',
-        data: ['Confirmed', 'Deaths', 'Recovered'],
+        data: ['Active', 'Deaths', 'Recovered'],
         icon: 'rect',
       },
       series: [
         {
-          name: 'Confirmed',
-          data: this._caseArrayTimeline('confirmed', this.data),
+          name: 'Active',
+          data: this._caseArrayTimeline('active', this.data),
           type: 'line',
           stack: 'x',
           areaStyle: {},
@@ -118,7 +121,7 @@ export class GeneralComponent implements OnInit {
           name: 'Recovered',
           data: this._caseArrayTimeline('recovered', this.data),
           type: 'line',
-          areaStyle: {},
+          // areaStyle: {},
           smooth: true,
           color: this.cardsList[2].colors.primary,
         },

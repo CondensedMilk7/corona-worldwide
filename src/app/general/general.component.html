@@ -24,7 +24,9 @@
       <mat-form-field>
         <mat-label>Select Date</mat-label>
         <mat-select>
-          <mat-option (click)="onDatePicked('all')">All time</mat-option>
+          <mat-option [value]="'All time'" (click)="onDatePicked('all')"
+            >All time</mat-option
+          >
           <mat-option
             *ngFor="let date of dateOptions"
             [value]="date"

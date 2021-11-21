@@ -63,6 +63,8 @@ export class CountryComponent implements OnInit {
 
   lineChartOption: EChartsOption;
   barChartOption: EChartsOption;
+  customLineChartOption: EChartsOption;
+  customBarChartOption: EChartsOption;
 
   constructor(
     private route: ActivatedRoute,
@@ -101,13 +103,52 @@ export class CountryComponent implements OnInit {
     });
   }
 
+  onDatePicked(date: string) {
+    if (date === 'all') {
+      this.customLineChartOption = this.lineChartOption;
+      this.customBarChartOption = this.barChartOption;
+    } else {
+      const months = this._getLast3Months();
+      const data = this.countryData.timeline.filter((item) => {
+        const itemDate = this.datePipe.transform(item.updated_at);
+        const dateSplit = itemDate.split(' ');
+        const monthAndYear = dateSplit[0] + ' ' + dateSplit[2];
+        return (
+          monthAndYear.includes(months[0]) ||
+          monthAndYear.includes(months[1]) ||
+          monthAndYear.includes(months[2])
+        );
+      });
+      this.customLineChartOption = {
+        xAxis: {
+          data: this._timelineOnChart(data),
+        },
+        series: [
+          { data: this._caseArrayTimeline('confirmed', data) },
+          { data: this._caseArrayTimeline('deaths', data) },
+          { data: this._caseArrayTimeline('recovered', data) },
+        ],
+      };
+      this.customBarChartOption = {
+        xAxis: {
+          data: this._timelineOnChart(data),
+        },
+        series: [
+          { data: this._caseArrayTimeline('new_confirmed', data) },
+          { data: this._caseArrayTimeline('new_deaths', data) },
+          { data: this._caseArrayTimeline('new_recovered', data) },
+        ],
+      };
+    }
+  }
+
   // creates options for chart
   generateChartOptions() {
     // Line chart
     this.lineChartOption = {
       xAxis: {
         type: 'category',
-        data: this._timelineOnChart(), // dates from timeline data
+        data: this._timelineOnChart(this.timelineData), // dates from timeline data
       },
       yAxis: {
         type: 'value',
@@ -121,7 +162,7 @@ export class CountryComponent implements OnInit {
       series: [
         {
           name: 'Confirmed',
-          data: this._caseArrayTimeline('confirmed'),
+          data: this._caseArrayTimeline('confirmed', this.timelineData),
           type: 'line',
           stack: 'x',
           areaStyle: {},
@@ -130,7 +171,7 @@ export class CountryComponent implements OnInit {
         },
         {
           name: 'Deaths',
-          data: this._caseArrayTimeline('deaths'),
+          data: this._caseArrayTimeline('deaths', this.timelineData),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -138,7 +179,7 @@ export class CountryComponent implements OnInit {
         },
         {
           name: 'Recovered',
-          data: this._caseArrayTimeline('recovered'),
+          data: this._caseArrayTimeline('recovered', this.timelineData),
           type: 'line',
           areaStyle: {},
           smooth: true,
@@ -149,25 +190,25 @@ export class CountryComponent implements OnInit {
 
     this.barChartOption = {
       xAxis: {
-        data: this._timelineOnChart(),
+        data: this._timelineOnChart(this.timelineData),
       },
       yAxis: {},
       series: [
         {
           name: 'Confirmed',
-          data: this._caseArrayTimeline('new_confirmed'),
+          data: this._caseArrayTimeline('new_confirmed', this.timelineData),
           type: 'bar',
           color: this.statCards[0].colors.primary,
         },
         {
           name: 'Deaths',
-          data: this._caseArrayTimeline('new_deaths'),
+          data: this._caseArrayTimeline('new_deaths', this.timelineData),
           type: 'bar',
           color: this.statCards[1].colors.primary,
         },
         {
           name: 'Recovered',
-          data: this._caseArrayTimeline('new_recovered'),
+          data: this._caseArrayTimeline('new_recovered', this.timelineData),
           type: 'bar',
           color: this.statCards[2].colors.primary,
         },
@@ -180,20 +221,50 @@ export class CountryComponent implements OnInit {
       },
     };
   }
+
+  private _getLast3Months() {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    const today = new Date();
+    const last3Months = [];
+
+    for (let i = 0; i < 3; i++) {
+      let dateTransformed =
+        monthNames[today.getMonth() - i].substring(0, 3) + // So that it matches the datePipe format
+        ' ' +
+        today.getFullYear();
+      last3Months.push(dateTransformed);
+    }
+    return last3Months;
+  }
+
   // TODO: Make all this reusable. It is repeated in general component
   // generate an array from values of specified property on timeline data
-  private _caseArrayTimeline(property: string) {
+  private _caseArrayTimeline(property: string, data: TimelineData[]) {
     const caseArray = [];
-    for (let item of this.timelineData) {
+    for (let item of data) {
       caseArray.unshift(item[property]); // Reversed, from oldest to newest needed
     }
     return caseArray;
   }
 
   // Generate array of date strings to display on chart's X axis
-  private _timelineOnChart(): string[] {
+  private _timelineOnChart(data: TimelineData[]): string[] {
     const timelineArr = [];
-    for (let item of this.timelineData) {
+    for (let item of data) {
       timelineArr.unshift(this.datePipe.transform(item.updated_at)); // Reversed so that it's from oldest to newest
     }
     return timelineArr;

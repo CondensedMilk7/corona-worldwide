@@ -33,12 +33,29 @@
     ></app-stat-card>
   </mat-card>
   <mat-card class="chart-card">
-    <mat-card-title>Total cases</mat-card-title>
+    <div class="chart-card-header" >
+      <mat-card-title>Total cases</mat-card-title>
+      <mat-form-field>
+        <mat-label>Select Date</mat-label>
+        <mat-select>
+          <mat-option (click)="onDatePicked('all')" [value]="'All time'"
+            >All time</mat-option
+          >
+          <mat-option
+            (click)="onDatePicked('months')"
+            [value]="'Last 3 months'"
+          >
+            Last 3 months
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div
       class="line-chart chart"
       echarts
       [options]="lineChartOption"
       [loading]="isLoading"
+      [merge]="customLineChartOption"
     ></div>
     <mat-card-title>Cases daily</mat-card-title>
     <div
@@ -46,6 +63,7 @@
       echarts
       [options]="barChartOption"
       [loading]="isLoading"
+      [merge]="customBarChartOption"
     ></div>
   </mat-card>
 </div>
