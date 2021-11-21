@@ -54,6 +54,7 @@ export class GeneralComponent implements OnInit, OnDestroy {
         this.generateDateOptions();
       },
       (error) => {
+        this.isLoading = false;
         this.isError = true;
         console.log(error);
         this._snackBar.open(

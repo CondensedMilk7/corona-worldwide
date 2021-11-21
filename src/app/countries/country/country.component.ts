@@ -87,7 +87,6 @@ export class CountryComponent implements OnInit, OnDestroy {
     this.route.params
       .pipe(
         switchMap((params) => {
-          this.isLoading = true;
           const code = params.code;
           return this.statService.getCountryData(code);
         })
@@ -102,6 +101,7 @@ export class CountryComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         (error) => {
+          this.isLoading = false;
           this.isError = true;
           console.log(error);
           this._snackBar.open(
