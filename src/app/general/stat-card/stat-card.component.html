@@ -5,7 +5,7 @@
       <mat-card-subtitle [style.color]="colors.accent">
         {{ stat.name }}:
       </mat-card-subtitle>
-      <p>{{ stat.value }}</p>
+      <p>{{ stat.value | number: "1.0-0" }}</p>
     </div>
     <mat-card-title [style.color]="colors.accent">
       <img [src]="iconUrl" [alt]="data.title" /> {{ data.title }}
