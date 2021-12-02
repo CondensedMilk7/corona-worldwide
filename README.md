@@ -11,6 +11,7 @@ This is an app based on
 [challenge](https://gist.github.com/giorgobiani/fdabffe1c745f2e3c9913a5f79a4fdc9) provided for 
 [BitCamp](https://www.bitcamp.ge/) by
 [Optio.ai](https://www.optio.ai/).
+The aim of this application is to display global and country-specific statistics about COVID-19.
 The challenge has been quite fun, but at times frustrating. The API is very inconssistent and the challenge instructions were at times unclear. Nevertheless,
 it was worth a try, especially because I have never used echarts before.
 
