@@ -1,9 +1,10 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
+.angular
 /tmp
 /out-tsc
+/dist
 # Only exists if Bazel was run
 /bazel-out
 

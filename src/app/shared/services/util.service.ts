@@ -25,6 +25,21 @@ export class UtilService {
     return caseArray;
   }
 
+  // Generates list of dates that can be picked on the chart to display data for that date
+  generateDateOptions(data: TimelineData[]) {
+    const dateList: { monthAndYear: string; date: string }[] = [];
+    let previousDate = '';
+    for (let item of data) {
+      const date = this.datePipe.transform(item.updated_at).split(' ');
+      const monthAndYear = date[0] + ' ' + date[2];
+      if (previousDate !== monthAndYear) {
+        dateList.push({ monthAndYear: monthAndYear, date: item.date });
+        previousDate = monthAndYear;
+      }
+    }
+    return dateList;
+  }
+
   // This is what I have to do to work around this STUPID, DUMBFOUNDED, ABSOULUTELIY ATROCIUS, INCONSSISTENT API
   // Takes in numbers and returns whichever is not zero. IF THEY ARE ALL GOD DAMN ZERO THEN IT RETURNS ZERO.
   avoidZero(...args: number[]) {
