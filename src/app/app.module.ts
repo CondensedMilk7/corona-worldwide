@@ -34,7 +34,9 @@ import { appReducer } from './store/reducers/';
 import { AppEffects } from './store/effects/app.effects';
 import { ChartComponent } from './chart/chart.component';
 import { StatCardsComponent } from './stat-cards/stat-cards.component';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -46,8 +48,8 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
     CountriesListComponent,
 
     FilterPipe,
-     ChartComponent,
-     StatCardsComponent,
+    ChartComponent,
+    StatCardsComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,9 +76,13 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
       echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.
     }),
 
-    StoreModule.forRoot({ app: appReducer }),
+    StoreModule.forRoot({ app: appReducer, router: routerReducer }),
     EffectsModule.forRoot([AppEffects]),
     StoreRouterConnectingModule.forRoot(),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],
