@@ -4,10 +4,10 @@ import { TimelineData } from '../shared/models/timeline-data.model';
 import { UtilService } from '../shared/services/util.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ThemeService } from '../shared/services/theme.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { GeneralPageActions } from '../store/actions';
-import { AppSelectors, RouterSelectors } from '../store/selectors';
+import { AppSelectors } from '../store/selectors';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,10 +16,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./general.component.scss'],
 })
 export class GeneralComponent implements OnInit, OnDestroy {
-  isLoading$ = this.store.select(AppSelectors.getIsLoading);
+  isLoading$: Observable<boolean> = this.store.select(
+    AppSelectors.getIsLoading
+  );
   isError = false;
 
-  timeline$ = this.store.pipe(select(AppSelectors.getTimelineAtDate));
+  timeline$: Observable<TimelineData[]> = this.store.pipe(
+    select(AppSelectors.getTimelineAtDate)
+  );
 
   dateOptions: { monthAndYear: string; date: string }[];
 

@@ -25,7 +25,7 @@ export class UtilService {
     return caseArray;
   }
 
-  // Generates list of dates (visual and values) that can be picked on the chart to display data for that date
+  // Generates list of dates (visual month+year and values in numbers) that can be picked on the chart to display data for that date
   generateDateOptions(data: TimelineData[]) {
     const dateList: { monthAndYear: string; date: string }[] = [];
     let previousDate = '';
