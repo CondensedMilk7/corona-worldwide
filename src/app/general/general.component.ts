@@ -7,7 +7,8 @@ import { ThemeService } from '../shared/services/theme.service';
 import { Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { GeneralPageActions } from '../store/actions';
-import { AppSelectors } from '../store/selectors';
+import { AppSelectors, RouterSelectors } from '../store/selectors';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-general',
@@ -17,8 +18,6 @@ import { AppSelectors } from '../store/selectors';
 export class GeneralComponent implements OnInit, OnDestroy {
   isLoading$ = this.store.select(AppSelectors.getIsLoading);
   isError = false;
-
-  data: TimelineData[] = [];
 
   timeline$ = this.store.pipe(select(AppSelectors.getTimelineAtDate));
 
@@ -31,7 +30,8 @@ export class GeneralComponent implements OnInit, OnDestroy {
     private utilService: UtilService,
     private _snackBar: MatSnackBar, // For error messages, rework with ngrx needed
     private themeService: ThemeService,
-    private store: Store
+    private store: Store,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +40,6 @@ export class GeneralComponent implements OnInit, OnDestroy {
       if (!data) {
         return;
       }
-      this.data = data;
       this.dateOptions = this.utilService.generateDateOptions(data);
     });
 
@@ -54,7 +53,7 @@ export class GeneralComponent implements OnInit, OnDestroy {
     this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
       if (isDark) {
         this.chartTheme = 'dark';
-      } else {  
+      } else {
         this.chartTheme = '';
       }
     });
@@ -64,6 +63,7 @@ export class GeneralComponent implements OnInit, OnDestroy {
 
   onDatePicked(date: string) {
     this.store.dispatch(GeneralPageActions.selectDate({ date }));
+    this.router.navigate([`/general/${date}`]);
   }
 
   ngOnDestroy() {

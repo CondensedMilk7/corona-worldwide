@@ -7,6 +7,7 @@ import { GeneralComponent } from './general/general.component';
 
 const routes: Routes = [
   { path: 'general/:date', component: GeneralComponent },
+  { path: 'general', redirectTo: 'general/all' },
   { path: '', redirectTo: 'general/all', pathMatch: 'full' },
   {
     path: 'countries',

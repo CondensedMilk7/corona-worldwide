@@ -8,5 +8,6 @@ export interface AppState {
   countryList: CountryNameCode[];
   currentCountry: CountryData;
   selectedDate: string;
-  errorMessage: string;
+  selectedCountryDate: string;
+  error: string | null;
 }

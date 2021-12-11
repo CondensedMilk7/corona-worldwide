@@ -25,15 +25,16 @@ export class UtilService {
     return caseArray;
   }
 
-  // Generates list of dates that can be picked on the chart to display data for that date
+  // Generates list of dates (visual and values) that can be picked on the chart to display data for that date
   generateDateOptions(data: TimelineData[]) {
     const dateList: { monthAndYear: string; date: string }[] = [];
     let previousDate = '';
     for (let item of data) {
       const date = this.datePipe.transform(item.updated_at).split(' ');
       const monthAndYear = date[0] + ' ' + date[2];
+      const dateValue = item.date.split('-')[1] + '-' + item.date.split('-')[0];
       if (previousDate !== monthAndYear) {
-        dateList.push({ monthAndYear: monthAndYear, date: item.date });
+        dateList.push({ monthAndYear: monthAndYear, date: dateValue });
         previousDate = monthAndYear;
       }
     }

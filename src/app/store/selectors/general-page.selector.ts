@@ -1,23 +1,28 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { TimelineData } from 'src/app/shared/models/timeline-data.model';
 import { AppState } from '../states';
-import { DatePipe } from '@angular/common';
+import { selectRouteParams } from './router.selector';
 
 export const appSelector = createFeatureSelector<AppState>('app');
 
-export const getTimelineAtDate = createSelector(appSelector, (state) => {
-  if (state.selectedDate === 'all') {
-    return state.timeline;
-  } else {
-    const year = state.selectedDate.split('-')[0];
-    const month = state.selectedDate.split('-')[1];
-    const monthAndYearTarget = year + '-' + month;
-    const selectedDateData = state.timeline?.filter((item) => {
-      const itemDate = item.date;
-      return itemDate.includes(monthAndYearTarget);
-    });
-    return selectedDateData;
+export const getTimelineAtDate = createSelector(
+  appSelector,
+  selectRouteParams,
+  (state, { date }) => {
+    if (date === 'all') {
+      return state.timeline;
+    } else {
+      const year = date.split('-')[0];
+      const month = date.split('-')[1];
+      const yearAndMonthTarget = month + '-' + year;
+      const selectedDateData = state.timeline?.filter((item) => {
+        const itemDate = item.date;
+        return itemDate.includes(yearAndMonthTarget);
+      });
+      return selectedDateData;
+    }
   }
-});
+);
 
 export const getTimeline = createSelector(
   appSelector,

@@ -13,7 +13,8 @@ const initialState: AppState = {
   countryList: [],
   currentCountry: null,
   selectedDate: 'all',
-  errorMessage: '',
+  selectedCountryDate: 'all',
+  error: null,
 };
 
 export const appReducer = createReducer(
