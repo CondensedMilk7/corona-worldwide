@@ -1,0 +1,152 @@
+{
+  "root": true,
+  "ignorePatterns": ["projects/**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json", "e2e/tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ],
+        "@angular-eslint/component-class-suffix": [
+          "error",
+          {
+            "suffixes": ["Page", "Component"]
+          }
+        ],
+        "@angular-eslint/directive-class-suffix": [
+          "error",
+          {
+            "suffixes": ["Directive"]
+          }
+        ],
+        "no-console": [
+          "error",
+          {
+            "allow": ["warn", "info", "error"]
+          }
+        ],
+        "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/dot-notation": "off",
+        "@typescript-eslint/explicit-member-accessibility": [
+          "off",
+          {
+            "accessibility": "explicit"
+          }
+        ],
+        "indent": "off",
+        "@typescript-eslint/member-delimiter-style": [
+          "error",
+          {
+            "multiline": {
+              "delimiter": "semi",
+              "requireLast": true
+            },
+            "singleline": {
+              "delimiter": "semi",
+              "requireLast": false
+            }
+          }
+        ],
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/member-ordering": "error",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-empty-interface": "error",
+        "@typescript-eslint/no-inferrable-types": [
+          "error",
+          {
+            "ignoreParameters": true
+          }
+        ],
+        "@typescript-eslint/no-misused-new": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-shadow": [
+          "warn",
+          {
+            "hoist": "all"
+          }
+        ],
+        "@typescript-eslint/no-unused-expressions": "error",
+        "@typescript-eslint/no-use-before-define": "error",
+        "@typescript-eslint/prefer-function-type": "error",
+        "@typescript-eslint/quotes": ["error", "single"],
+        "@typescript-eslint/semi": ["error", "always"],
+        "@typescript-eslint/type-annotation-spacing": "error",
+        "@typescript-eslint/unified-signatures": "error",
+        "arrow-body-style": "error",
+        "brace-style": ["error", "1tbs"],
+        "constructor-super": "error",
+        "curly": "error",
+        "eqeqeq": ["warn", "smart"],
+        "eol-last": "error",
+        "guard-for-in": "error",
+        "id-blacklist": "off",
+        "id-match": "off",
+        "max-len": [
+          "error",
+          {
+            "code": 180
+          }
+        ],
+        "no-bitwise": "error",
+        "no-caller": "error",
+        "no-debugger": "error",
+        "no-empty": "off",
+        "no-eval": "error",
+        "no-fallthrough": "error",
+        "no-new-wrappers": "error",
+        "no-throw-literal": "error",
+        "no-trailing-spaces": "error",
+        "no-undef-init": "error",
+        "no-underscore-dangle": "off",
+        "no-unused-labels": "error",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "none"
+          }
+        ],
+        "no-var": "error",
+        "prefer-const": "error",
+        "radix": "error",
+        "spaced-comment": [
+          "error",
+          "always",
+          {
+            "markers": ["/"]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {}
+    }
+  ]
+}
