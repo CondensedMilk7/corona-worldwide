@@ -40,3 +40,8 @@ export const getCountriesList = createSelector(
   appSelector,
   (state) => state.countryList,
 );
+
+export const getCountryData = createSelector(
+  appSelector,
+  (state) => state.countryData
+);

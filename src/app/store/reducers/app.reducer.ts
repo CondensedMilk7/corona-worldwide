@@ -44,5 +44,6 @@ export const appReducer = createReducer(
     ...state,
     countryData: countryData,
   })),
-  on(AppActions.switchDarkMode, (state, { darkMode }) => ({...state, darkMode: darkMode}))
+  on(AppActions.switchDarkMode, (state, { darkMode }) => ({...state, darkMode: darkMode})),
+  on(CoronaApiActions.getCountryDataSuccess, (state, {data}) => ({...state, countryData: data}))
 );

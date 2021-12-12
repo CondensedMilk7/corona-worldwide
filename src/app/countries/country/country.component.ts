@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { switchMap, startWith, map } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import {
   StatCardColors,
   StatCardData,
@@ -13,9 +13,11 @@ import { StatService } from 'src/app/shared/services/stat.service';
 import { EChartsOption } from 'echarts';
 import { DatePipe } from '@angular/common';
 import { UtilService } from 'src/app/shared/services/util.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { CountryNameCode } from 'src/app/shared/models/country-name-code';
+import { Store } from '@ngrx/store';
+import { AppSelectors } from 'src/app/store/selectors';
+import { CountryPageActions } from 'src/app/store/actions';
 
 @Component({
   selector: 'app-country',
@@ -26,34 +28,9 @@ export class CountryComponent implements OnInit, OnDestroy {
   isLoading = true;
   isError = false;
   // Listing this all out to prevent errors in console: cannot read countryData.name in the template!
-  countryData: CountryData = {
-    name: '',
-    coordinates: {
-      latitude: 0,
-      longitude: 0,
-    },
-    code: '',
-    population: 0,
-    updated_at: '',
-    today: {
-      deaths: 0,
-      confirmed: 0,
-    },
-    latest_data: {
-      calculated: {
-        death_rate: 0,
-        recovery_rate: 0,
-        recovered_vs_death_ratio: null,
-        cases_per_million_population: 0,
-      },
-      deaths: 0,
-      confirmed: 0,
-      recovered: 0,
-      critical: 0,
-    },
-    timeline: [],
-  };
+  countryData$: Observable<CountryData> = this.store.select(AppSelectors.getCountryData);
 
+  countryData: CountryData;
   timelineData: TimelineData[]; // extracted from country data for the sake of readability
 
   countryList: CountryNameCode[];
@@ -74,42 +51,44 @@ export class CountryComponent implements OnInit, OnDestroy {
   chartThemeSub = new Subscription();
 
   constructor(
-    private route: ActivatedRoute,
+    private store: Store,
     private statService: StatService,
     private router: Router,
     private datePipe: DatePipe,
     private utilService: UtilService,
-    private _snackBar: MatSnackBar,
     private themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.route.params
-      .pipe(
-        switchMap((params) => {
-          const code = params.code;
-          return this.statService.getCountryData(code);
-        }),
-      )
-      .subscribe(
-        (countryData) => {
-          this.countryData = countryData;
-          this.timelineData = countryData.timeline;
-          this.statCards = this.generateCardData();
-          this.countryControl.setValue(this.countryData.name); // Set the value for country picker
-          this.generateChartOptions();
-          this.isLoading = false;
-        },
-        (error) => {
-          this.isLoading = false;
-          this.isError = true;
-          this._snackBar.open(
-            'An error has occured!: ' + error.message,
-            'Dismiss',
-          );
-        },
-      );
+    this.store.dispatch(CountryPageActions.loadPage());
+    this.countryData$.subscribe((data) => {
+
+    });
+    // this.route.params
+    //   .pipe(
+    //     switchMap((params) => {
+    //       const code = params.code;
+    //       return this.statService.getCountryData(code);
+    //     }),
+    //   )
+    //   .subscribe(
+    //     (countryData) => {
+    //       this.countryData = countryData;
+    //       this.timelineData = countryData.timeline;
+    //       this.statCards = this.generateCardData();
+    //       this.countryControl.setValue(this.countryData.name); // Set the value for country picker
+    //       this.generateChartOptions();
+    //       this.isLoading = false;
+    //     },
+    //     (error) => {
+    //       this.isLoading = false;
+    //       this.isError = true;
+    //       this._snackBar.open(
+    //         'An error has occured!: ' + error.message,
+    //         'Dismiss',
+    //       );
+    //     },
+    //   );
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
       this.countryList = data;
