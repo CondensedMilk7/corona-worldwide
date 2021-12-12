@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { catchError, concatMap, map } from 'rxjs/operators';
 import { StatService } from 'src/app/shared/services/stat.service';
-import { CoronaApiActions, GeneralPageActions } from '../actions';
+import {
+  CoronaApiActions,
+  CountriesListPageActions,
+  GeneralPageActions,
+} from '../actions';
 
 @Injectable({ providedIn: 'root' })
 export class AppEffects {
@@ -15,22 +20,41 @@ export class AppEffects {
           .getGlobal()
           .pipe(
             map((response) =>
-              CoronaApiActions.getTimelineSuccess({ data: response })
-            )
-          )
+              CoronaApiActions.getTimelineSuccess({ data: response }),
+            ),
+          ),
       ),
       catchError((error, caught) => {
         this.store.dispatch(
-          CoronaApiActions.getTimelineFail({ message: error.error })
+          CoronaApiActions.getTimelineFail({ message: error.error }),
         );
+        this._snackbar.open(error.error, 'Dismiss');
         return caught;
-      })
-    )
+      }),
+    ),
+  );
+
+  loadCountriesList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CountriesListPageActions.loadPage),
+      concatMap(() =>
+        this.statService
+          .getCountryCodes()
+          .pipe(
+            map((response) =>
+              CoronaApiActions.getCountryNamesSuccess({
+                nameCodeList: response,
+              }),
+            ),
+          ),
+      ),
+    ),
   );
 
   constructor(
     private actions$: Actions,
     private statService: StatService,
-    private store: Store
+    private store: Store,
+    private _snackbar: MatSnackBar,
   ) {}
 }

@@ -1,8 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   CoronaApiActions,
-  CountriesListPageActions,
-  CountryPageActions,
   GeneralPageActions,
 } from '../actions/index';
 import { AppState } from '../states/';
@@ -33,5 +31,6 @@ export const appReducer = createReducer(
   on(CoronaApiActions.getTimelineFail, (state, { message }) => ({
     ...state,
     errorMessage: message,
-  }))
+  })),
+  on(CoronaApiActions.getCountryNamesSuccess, (state, {nameCodeList}) => ({...state, countryList: nameCodeList}))
 );

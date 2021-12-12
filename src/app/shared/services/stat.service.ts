@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { TimelineData } from '../models/timeline-data.model';
 import { CountryData } from '../models/country-data.model';
+import { CountryNameCode } from '../models/country-name-code';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class StatService {
@@ -18,23 +20,21 @@ export class StatService {
         `${this.baseUrl}timeline`
       )
       .pipe(
-        map((resData) => {
-          return resData.data;
-        })
+        map((resData) => resData.data)
       );
   }
 
   // Returns an array of objects with the name of the country and its code
-  getCountryCodes() {
+  getCountryCodes(): Observable<CountryNameCode[]> {
     return this.http
       .get<{ data: CountryData[]; _cacheHit: boolean }>(
         `${this.baseUrl}countries`
       )
       .pipe(
         map((resData) => {
-          const countryCodes = [];
-          for (let country of resData.data) {
-            countryCodes.push({ name: country.name, code: country.code });
+          const countryCodes: CountryNameCode[] = [];
+          for (const country of resData.data) {
+            countryCodes.push({ countryName: country.name, countryCode: country.code });
           }
           return countryCodes;
         })
@@ -48,9 +48,7 @@ export class StatService {
         `${this.baseUrl}countries/${countryCode}`
       )
       .pipe(
-        map((resData) => {
-          return resData.data;
-        })
+        map((resData) => resData.data)
       );
   }
 }

@@ -19,7 +19,7 @@ export const getCountryNamesSuccess = createAction(
 
 export const getCountryNamesFail = createAction(
   '[Corona API] Get Country Names Failed',
-  props<{ messag: string }>()
+  props<{ message: string }>()
 );
 
 export const getCountryDataSuccess = createAction(

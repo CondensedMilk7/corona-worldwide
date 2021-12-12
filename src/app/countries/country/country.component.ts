@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { UtilService } from 'src/app/shared/services/util.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ThemeService } from 'src/app/shared/services/theme.service';
+import { CountryNameCode } from 'src/app/shared/models/country-name-code';
 
 @Component({
   selector: 'app-country',
@@ -55,9 +56,9 @@ export class CountryComponent implements OnInit, OnDestroy {
 
   timelineData: TimelineData[]; // extracted from country data for the sake of readability
 
-  countryList: { name: string; code: string }[];
+  countryList: CountryNameCode[];
   countryControl = new FormControl();
-  filteredOptions: Observable<{ name: string; code: string }[]>;
+  filteredOptions: Observable<CountryNameCode[]>;
 
   statCards: {
     data: StatCardData;
@@ -123,7 +124,9 @@ export class CountryComponent implements OnInit, OnDestroy {
 
     // Set chart theme
     const isDark = localStorage.getItem('isDark');
-    if (isDark === 'true') this.chartTheme = 'dark';
+    if (isDark === 'true') {
+this.chartTheme = 'dark';
+}
 
     // Listen for theme change
     this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
@@ -289,7 +292,7 @@ export class CountryComponent implements OnInit, OnDestroy {
     const last3Months = [];
 
     for (let i = 0; i < 3; i++) {
-      let dateTransformed =
+      const dateTransformed =
         monthNames[today.getMonth() - i].substring(0, 3) + // So that it matches the datePipe format
         ' ' +
         today.getFullYear();
@@ -298,16 +301,16 @@ export class CountryComponent implements OnInit, OnDestroy {
     return last3Months;
   }
 
-  onChangeCountry(country: { name: string; code: string }) {
-    this.router.navigate([`/countries/${country.code}/${country.name}`]);
+  onChangeCountry(country: CountryNameCode) {
+    this.router.navigate([`/countries/${country.countryCode}/${country.countryName}`]);
   }
 
   // filter out country selector options based on input value
-  private _filter(value: string): { name: string; code: string }[] {
+  private _filter(value: string): CountryNameCode[] {
     const filterValue = value.toLowerCase();
 
     return this.countryList.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
+      option.countryName.toLowerCase().includes(filterValue)
     );
   }
 

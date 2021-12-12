@@ -15,9 +15,9 @@
           <mat-option
             (click)="onChangeCountry(country)"
             *ngFor="let country of filteredOptions | async"
-            [value]="country.name"
+            [value]="country.countryName"
           >
-            {{ country.name }}
+            {{ country.countryName }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

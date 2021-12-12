@@ -47,22 +47,22 @@ export class GeneralComponent implements OnInit, OnDestroy {
       this.dateOptions = this.utilService.generateDateOptions(data);
     });
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
     // TODO: NGRX THAT BITCH
     // Set chart theme
     const isDark = localStorage.getItem('isDark');
-    if (isDark === 'true') this.chartTheme = 'dark';
+    if (isDark === 'true') {
+      this.chartTheme = 'dark';
+    }
 
     // Listen for them change
-    this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
-      if (isDark) {
+    this.chartThemeSub = this.themeService.darkTheme.subscribe((dark) => {
+      if (dark) {
         this.chartTheme = 'dark';
       } else {
         this.chartTheme = '';
       }
     });
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
   }
 
   onDatePicked(date: string) {

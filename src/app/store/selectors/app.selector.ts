@@ -1,5 +1,4 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { TimelineData } from 'src/app/shared/models/timeline-data.model';
 import { AppState } from '../states';
 import { selectRouteParams } from './router.selector';
 
@@ -9,6 +8,9 @@ export const getTimelineAtDate = createSelector(
   appSelector,
   selectRouteParams,
   (state, { date }) => {
+    if (!date) {
+      return null;
+    }
     if (date === 'all') {
       return state.timeline;
     } else {
@@ -32,4 +34,9 @@ export const getTimeline = createSelector(
 export const getIsLoading = createSelector(
   appSelector,
   (state) => state.isLoading
+);
+
+export const getCountriesList = createSelector(
+  appSelector,
+  (state) => state.countryList
 );
