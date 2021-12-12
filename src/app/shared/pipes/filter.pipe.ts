@@ -12,7 +12,9 @@ export class FilterPipe implements PipeTransform {
     const result = [];
     for (const item of value) {
       if (
-        item.countryName.toLocaleLowerCase().includes(filterString.toLocaleLowerCase())
+        item.countryName
+          .toLocaleLowerCase()
+          .includes(filterString.toLocaleLowerCase())
       ) {
         result.push(item);
       }

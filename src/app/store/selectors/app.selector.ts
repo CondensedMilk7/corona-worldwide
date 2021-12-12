@@ -23,20 +23,20 @@ export const getTimelineAtDate = createSelector(
       });
       return selectedDateData;
     }
-  }
+  },
 );
 
 export const getTimeline = createSelector(
   appSelector,
-  (state) => state.timeline
+  (state) => state.timeline,
 );
 
 export const getIsLoading = createSelector(
   appSelector,
-  (state) => state.isLoading
+  (state) => state.isLoading,
 );
 
 export const getCountriesList = createSelector(
   appSelector,
-  (state) => state.countryList
+  (state) => state.countryList,
 );

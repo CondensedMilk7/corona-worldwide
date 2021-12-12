@@ -47,8 +47,8 @@ export class UtilService {
     let nonZeroVal = 0;
     for (const value of args) {
       if (value !== 0) {
-nonZeroVal = value;
-}
+        nonZeroVal = value;
+      }
     }
     return nonZeroVal;
   }

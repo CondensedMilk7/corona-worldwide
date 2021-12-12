@@ -17,12 +17,12 @@ import { Router } from '@angular/router';
 })
 export class GeneralComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean> = this.store.select(
-    AppSelectors.getIsLoading
+    AppSelectors.getIsLoading,
   );
   isError = false;
 
   timeline$: Observable<TimelineData[]> = this.store.pipe(
-    select(AppSelectors.getTimelineAtDate)
+    select(AppSelectors.getTimelineAtDate),
   );
 
   dateOptions: { monthAndYear: string; date: string }[];
@@ -35,7 +35,7 @@ export class GeneralComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar, // For error messages, rework with ngrx needed
     private themeService: ThemeService,
     private store: Store,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -62,7 +62,6 @@ export class GeneralComponent implements OnInit, OnDestroy {
         this.chartTheme = '';
       }
     });
-
   }
 
   onDatePicked(date: string) {

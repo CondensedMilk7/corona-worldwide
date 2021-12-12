@@ -9,5 +9,7 @@ export interface AppState {
   currentCountry: CountryData;
   selectedDate: string;
   selectedCountryDate: string;
+  countryData: CountryData;
   error: string | null;
+  darkMode: boolean;
 }

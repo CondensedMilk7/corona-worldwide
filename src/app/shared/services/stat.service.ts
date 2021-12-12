@@ -17,27 +17,28 @@ export class StatService {
   getGlobal() {
     return this.http
       .get<{ data: TimelineData[]; _cacheHit: boolean }>(
-        `${this.baseUrl}timeline`
+        `${this.baseUrl}timeline`,
       )
-      .pipe(
-        map((resData) => resData.data)
-      );
+      .pipe(map((resData) => resData.data));
   }
 
   // Returns an array of objects with the name of the country and its code
   getCountryCodes(): Observable<CountryNameCode[]> {
     return this.http
       .get<{ data: CountryData[]; _cacheHit: boolean }>(
-        `${this.baseUrl}countries`
+        `${this.baseUrl}countries`,
       )
       .pipe(
         map((resData) => {
           const countryCodes: CountryNameCode[] = [];
           for (const country of resData.data) {
-            countryCodes.push({ countryName: country.name, countryCode: country.code });
+            countryCodes.push({
+              countryName: country.name,
+              countryCode: country.code,
+            });
           }
           return countryCodes;
-        })
+        }),
       );
   }
 
@@ -45,10 +46,8 @@ export class StatService {
   getCountryData(countryCode: string) {
     return this.http
       .get<{ data: CountryData; _cacheHit: boolean }>(
-        `${this.baseUrl}countries/${countryCode}`
+        `${this.baseUrl}countries/${countryCode}`,
       )
-      .pipe(
-        map((resData) => resData.data)
-      );
+      .pipe(map((resData) => resData.data));
   }
 }

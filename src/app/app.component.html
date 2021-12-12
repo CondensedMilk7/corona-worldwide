@@ -8,24 +8,22 @@
     <mat-slide-toggle
       class="theme-switch"
       [checked]="isDark"
-      (change)="onThemeSwitched($event)"
-      >Dark</mat-slide-toggle
-    >
+      (change)="onThemeSwitched($event)">
+      Dark
+    </mat-slide-toggle>
 
     <button
       class="nav-button"
       mat-button
       routerLink="/general"
-      routerLinkActive="active"
-    >
+      routerLinkActive="active">
       General
     </button>
     <button
       class="nav-button"
       mat-button
       routerLink="/countries"
-      routerLinkActive="active"
-    >
+      routerLinkActive="active">
       Countries
     </button>
     <button class="menu" mat-icon-button [matMenuTriggerFor]="menu">

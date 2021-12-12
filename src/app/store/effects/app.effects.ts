@@ -38,18 +38,23 @@ export class AppEffects {
     this.actions$.pipe(
       ofType(CountriesListPageActions.loadPage),
       concatMap(() =>
-        this.statService
-          .getCountryCodes()
-          .pipe(
-            map((response) =>
-              CoronaApiActions.getCountryNamesSuccess({
-                nameCodeList: response,
-              }),
-            ),
+        this.statService.getCountryCodes().pipe(
+          map((response) =>
+            CoronaApiActions.getCountryNamesSuccess({
+              nameCodeList: response,
+            }),
           ),
+        ),
       ),
     ),
   );
+
+  // loadCountryData$ = createEffect(
+  //   () => this.actions$.pipe(ofType(CountryPageActions.loadPage)),
+  //   withLatestFrom(
+  //     this.store.pipe(select(RouterSelectors.selectRouteParams)),
+  //   concatMap(() => )
+  // );
 
   constructor(
     private actions$: Actions,

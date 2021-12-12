@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
   StatCardData,
   StatCardColors,
@@ -9,13 +9,11 @@ import {
   templateUrl: './stat-card.component.html',
   styleUrls: ['./stat-card.component.scss'],
 })
-export class StatCardComponent implements OnInit {
+export class StatCardComponent {
   @Input() data = new StatCardData('', [{ name: '', value: 0 }]);
   @Input() colors = new StatCardColors('', '');
-  @Input() iconUrl: string = '';
-  @Input() loading: boolean = false;
+  @Input() iconUrl = '';
+  @Input() loading = false;
 
   constructor() {}
-
-  ngOnInit(): void {}
 }

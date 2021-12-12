@@ -5,5 +5,5 @@ export const loadPage = createAction('[Countries List Page] Load Page');
 
 export const selectCountry = createAction(
   '[Countries List Page] Select Country',
-  props<{ nameAndCode: CountryNameCode }>()
+  props<{ nameAndCode: CountryNameCode }>(),
 );

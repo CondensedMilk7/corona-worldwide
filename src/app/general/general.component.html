@@ -2,22 +2,20 @@
 <div class="container" *ngIf="!isError">
   <app-stat-cards
     *ngIf="timeline$ | async as timelineData"
-    [data]="timelineData"
-  ></app-stat-cards>
+    [data]="timelineData"></app-stat-cards>
   <mat-card class="chart-card">
     <div class="card-header">
-      <mat-card-title> Total cases </mat-card-title>
+      <mat-card-title>Total cases</mat-card-title>
       <mat-form-field>
         <mat-label>Select Date</mat-label>
         <mat-select>
-          <mat-option [value]="'All time'" (click)="onDatePicked('all')"
-            >All time</mat-option
-          >
+          <mat-option [value]="'All time'" (click)="onDatePicked('all')">
+            All time
+          </mat-option>
           <mat-option
             *ngFor="let item of dateOptions"
             [value]="item.date"
-            (click)="onDatePicked(item.date)"
-          >
+            (click)="onDatePicked(item.date)">
             {{ item.monthAndYear }}
           </mat-option>
         </mat-select>
@@ -26,7 +24,6 @@
     <app-chart
       *ngIf="timeline$ | async as timelineData"
       [data]="timelineData"
-      [isLoading]="isLoading$ | async"
-    ></app-chart>
+      [isLoading]="isLoading$ | async"></app-chart>
   </mat-card>
 </div>
