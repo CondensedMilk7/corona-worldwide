@@ -11,9 +11,9 @@
 <div class="container" *ngIf="!(isLoading$ | async)">
   <mat-card
     class="country-card"
-    *ngFor="let country of countries | filter: searchText"
+    *ngFor="let country of (countries$ |async) | filter: searchText"
     (click)="onCountryClicked(country)"
   >
     <mat-card-title class="country-name"> {{ country.countryName }} </mat-card-title>
   </mat-card>
-  </div>
+</div>
