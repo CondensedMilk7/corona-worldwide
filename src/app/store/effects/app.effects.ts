@@ -51,18 +51,24 @@ export class AppEffects {
     ),
   );
 
- loadCountryData$ = createEffect(
-   () => this.actions$.pipe(
-     ofType(CountryPageActions.loadPage),
-     withLatestFrom(
-       this.store.select(RouterSelectors.selectRouteParams),
-       (_action, router) => router.store.params.code
-     ),
-     switchMap((code) => this.statService.getCountryData(code)).pipe(
-       map((countryData) => this.store.dispatch(CountryPageActions.selectCountry({countryData: countryData})))
-     )
-   )
- );
+  loadCountryData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CountryPageActions.loadPage),
+      withLatestFrom(
+        this.store.select(RouterSelectors.selectRouteParams),
+        (_action, router) => router.store.params.code,
+      ),
+      switchMap((code) =>
+        this.statService
+          .getCountryData(code)
+          .pipe(
+            map((countryData) =>
+              CoronaApiActions.getCountryDataSuccess({ data: countryData }),
+            ),
+          ),
+      ),
+    ),
+  );
 
   constructor(
     private actions$: Actions,
