@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, concatMap, map } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { StatService } from 'src/app/shared/services/stat.service';
 import {
   CoronaApiActions,
   CountriesListPageActions,
+  CountryPageActions,
   GeneralPageActions,
 } from '../actions';
+import { RouterSelectors } from '../selectors';
 
 @Injectable({ providedIn: 'root' })
 export class AppEffects {
@@ -49,12 +51,18 @@ export class AppEffects {
     ),
   );
 
-  // loadCountryData$ = createEffect(
-  //   () => this.actions$.pipe(ofType(CountryPageActions.loadPage)),
-  //   withLatestFrom(
-  //     this.store.pipe(select(RouterSelectors.selectRouteParams)),
-  //   concatMap(() => )
-  // );
+ loadCountryData$ = createEffect(
+   () => this.actions$.pipe(
+     ofType(CountryPageActions.loadPage),
+     withLatestFrom(
+       this.store.select(RouterSelectors.selectRouteParams),
+       (_action, router) => router.store.params.code
+     ),
+     switchMap((code) => this.statService.getCountryData(code)).pipe(
+       map((countryData) => this.store.dispatch(CountryPageActions.selectCountry({countryData: countryData})))
+     )
+   )
+ );
 
   constructor(
     private actions$: Actions,

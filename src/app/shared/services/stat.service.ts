@@ -43,7 +43,7 @@ export class StatService {
   }
 
   // get data for specific country
-  getCountryData(countryCode: string) {
+  getCountryData(countryCode: string): Observable<CountryData> {
     return this.http
       .get<{ data: CountryData; _cacheHit: boolean }>(
         `${this.baseUrl}countries/${countryCode}`,
