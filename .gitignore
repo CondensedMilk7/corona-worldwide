@@ -1,7 +1,10 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
+<<<<<<< HEAD
 .angular
+=======
+>>>>>>> 8a559d83efc25a29da2b6bb8336c29c0a04aec5d
 /tmp
 /out-tsc
 /dist
