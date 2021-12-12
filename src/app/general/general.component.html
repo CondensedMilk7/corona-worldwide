@@ -1,48 +1,29 @@
 <h1>Global Statistics</h1>
 <div class="container" *ngIf="!isError">
-  <mat-card class="cards">
-    <div class="update-date">
-      <mat-card-title>Updated at:</mat-card-title>
-      <mat-card-title class="date">{{ updatedAt | date }}</mat-card-title>
-    </div>
-    <mat-divider></mat-divider>
-    <div class="cards__stats">
-      <app-stat-card
-        *ngFor="let card of cardsList"
-        [data]="card.data"
-        [colors]="card.colors"
-        [iconUrl]="card.iconUrl"
-        [loading]="isLoading"
-      ></app-stat-card>
-    </div>
-  </mat-card>
+  <app-stat-cards
+    *ngIf="timeline$ | async as timelineData"
+    [data]="timelineData"></app-stat-cards>
   <mat-card class="chart-card">
     <div class="card-header">
-      <mat-card-title> Total cases </mat-card-title>
+      <mat-card-title>Total cases</mat-card-title>
       <mat-form-field>
         <mat-label>Select Date</mat-label>
         <mat-select>
-          <mat-option [value]="'All time'" (click)="onDatePicked('all')"
-            >All time</mat-option
-          >
+          <mat-option [value]="'All time'" (click)="onDatePicked('all')">
+            All time
+          </mat-option>
           <mat-option
-            *ngFor="let date of dateOptions"
-            [value]="date"
-            (click)="onDatePicked(date)"
-          >
-            {{ date }}
+            *ngFor="let item of dateOptions"
+            [value]="item.date"
+            (click)="onDatePicked(item.date)">
+            {{ item.monthAndYear }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
-    <div
-      class="chart"
-      echarts
-      [options]="chartOption"
-      [loading]="isLoading"
-      [autoResize]="true"
-      [merge]="customChartOption"
-      [theme]="chartTheme"
-    ></div>
+    <app-chart
+      *ngIf="timeline$ | async as timelineData"
+      [data]="timelineData"
+      [isLoading]="isLoading$ | async"></app-chart>
   </mat-card>
 </div>

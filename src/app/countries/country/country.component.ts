@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { switchMap, startWith, map } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import {
   StatCardColors,
   StatCardData,
@@ -13,8 +13,11 @@ import { StatService } from 'src/app/shared/services/stat.service';
 import { EChartsOption } from 'echarts';
 import { DatePipe } from '@angular/common';
 import { UtilService } from 'src/app/shared/services/util.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ThemeService } from 'src/app/shared/services/theme.service';
+import { CountryNameCode } from 'src/app/shared/models/country-name-code';
+import { Store } from '@ngrx/store';
+import { AppSelectors } from 'src/app/store/selectors';
+import { CountryPageActions } from 'src/app/store/actions';
 
 @Component({
   selector: 'app-country',
@@ -25,39 +28,14 @@ export class CountryComponent implements OnInit, OnDestroy {
   isLoading = true;
   isError = false;
   // Listing this all out to prevent errors in console: cannot read countryData.name in the template!
-  countryData: CountryData = {
-    name: '',
-    coordinates: {
-      latitude: 0,
-      longitude: 0,
-    },
-    code: '',
-    population: 0,
-    updated_at: '',
-    today: {
-      deaths: 0,
-      confirmed: 0,
-    },
-    latest_data: {
-      calculated: {
-        death_rate: 0,
-        recovery_rate: 0,
-        recovered_vs_death_ratio: null,
-        cases_per_million_population: 0,
-      },
-      deaths: 0,
-      confirmed: 0,
-      recovered: 0,
-      critical: 0,
-    },
-    timeline: [],
-  };
+  countryData$: Observable<CountryData> = this.store.select(AppSelectors.getCountryData);
 
+  countryData: CountryData;
   timelineData: TimelineData[]; // extracted from country data for the sake of readability
 
-  countryList: { name: string; code: string }[];
+  countryList: CountryNameCode[];
   countryControl = new FormControl();
-  filteredOptions: Observable<{ name: string; code: string }[]>;
+  filteredOptions: Observable<CountryNameCode[]>;
 
   statCards: {
     data: StatCardData;
@@ -73,43 +51,44 @@ export class CountryComponent implements OnInit, OnDestroy {
   chartThemeSub = new Subscription();
 
   constructor(
-    private route: ActivatedRoute,
+    private store: Store,
     private statService: StatService,
     private router: Router,
     private datePipe: DatePipe,
     private utilService: UtilService,
-    private _snackBar: MatSnackBar,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.route.params
-      .pipe(
-        switchMap((params) => {
-          const code = params.code;
-          return this.statService.getCountryData(code);
-        })
-      )
-      .subscribe(
-        (countryData) => {
-          this.countryData = countryData;
-          this.timelineData = countryData.timeline;
-          this.statCards = this.generateCardData();
-          this.countryControl.setValue(this.countryData.name); // Set the value for country picker
-          this.generateChartOptions();
-          this.isLoading = false;
-        },
-        (error) => {
-          this.isLoading = false;
-          this.isError = true;
-          console.log(error);
-          this._snackBar.open(
-            'An error has occured!: ' + error.message,
-            'Dismiss'
-          );
-        }
-      );
+    this.store.dispatch(CountryPageActions.loadPage());
+    this.countryData$.subscribe((data) => {
+
+    });
+    // this.route.params
+    //   .pipe(
+    //     switchMap((params) => {
+    //       const code = params.code;
+    //       return this.statService.getCountryData(code);
+    //     }),
+    //   )
+    //   .subscribe(
+    //     (countryData) => {
+    //       this.countryData = countryData;
+    //       this.timelineData = countryData.timeline;
+    //       this.statCards = this.generateCardData();
+    //       this.countryControl.setValue(this.countryData.name); // Set the value for country picker
+    //       this.generateChartOptions();
+    //       this.isLoading = false;
+    //     },
+    //     (error) => {
+    //       this.isLoading = false;
+    //       this.isError = true;
+    //       this._snackBar.open(
+    //         'An error has occured!: ' + error.message,
+    //         'Dismiss',
+    //       );
+    //     },
+    //   );
     // Get the list of countries with codes to renavigate to different country
     this.statService.getCountryCodes().subscribe((data) => {
       this.countryList = data;
@@ -117,17 +96,19 @@ export class CountryComponent implements OnInit, OnDestroy {
       // TODO: switchMap or something, this looks like bad practice
       this.filteredOptions = this.countryControl.valueChanges.pipe(
         startWith(''),
-        map((value) => this._filter(value))
+        map((value) => this._filter(value)),
       );
     });
 
     // Set chart theme
     const isDark = localStorage.getItem('isDark');
-    if (isDark === 'true') this.chartTheme = 'dark';
+    if (isDark === 'true') {
+      this.chartTheme = 'dark';
+    }
 
     // Listen for theme change
-    this.chartThemeSub = this.themeService.darkTheme.subscribe((isDark) => {
-      if (isDark) {
+    this.chartThemeSub = this.themeService.darkTheme.subscribe((dark) => {
+      if (dark) {
         this.chartTheme = 'dark';
       } else {
         this.chartTheme = '';
@@ -196,7 +177,7 @@ export class CountryComponent implements OnInit, OnDestroy {
           name: 'Confirmed',
           data: this.utilService.caseArrayTimeline(
             'confirmed',
-            this.timelineData
+            this.timelineData,
           ),
           type: 'line',
           stack: 'x',
@@ -216,7 +197,7 @@ export class CountryComponent implements OnInit, OnDestroy {
           name: 'Recovered',
           data: this.utilService.caseArrayTimeline(
             'recovered',
-            this.timelineData
+            this.timelineData,
           ),
           type: 'line',
           areaStyle: {},
@@ -236,7 +217,7 @@ export class CountryComponent implements OnInit, OnDestroy {
           name: 'Confirmed',
           data: this.utilService.caseArrayTimeline(
             'new_confirmed',
-            this.timelineData
+            this.timelineData,
           ),
           type: 'bar',
           color: this.statCards[0].colors.primary,
@@ -245,7 +226,7 @@ export class CountryComponent implements OnInit, OnDestroy {
           name: 'Deaths',
           data: this.utilService.caseArrayTimeline(
             'new_deaths',
-            this.timelineData
+            this.timelineData,
           ),
           type: 'bar',
           color: this.statCards[1].colors.primary,
@@ -254,7 +235,7 @@ export class CountryComponent implements OnInit, OnDestroy {
           name: 'Recovered',
           data: this.utilService.caseArrayTimeline(
             'new_recovered',
-            this.timelineData
+            this.timelineData,
           ),
           type: 'bar',
           color: this.statCards[2].colors.primary,
@@ -269,46 +250,10 @@ export class CountryComponent implements OnInit, OnDestroy {
     };
   }
 
-  private _getLast3Months() {
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-
-    const today = new Date();
-    const last3Months = [];
-
-    for (let i = 0; i < 3; i++) {
-      let dateTransformed =
-        monthNames[today.getMonth() - i].substring(0, 3) + // So that it matches the datePipe format
-        ' ' +
-        today.getFullYear();
-      last3Months.push(dateTransformed);
-    }
-    return last3Months;
-  }
-
-  onChangeCountry(country: { name: string; code: string }) {
-    this.router.navigate([`/countries/${country.code}/${country.name}`]);
-  }
-
-  // filter out country selector options based on input value
-  private _filter(value: string): { name: string; code: string }[] {
-    const filterValue = value.toLowerCase();
-
-    return this.countryList.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
+  onChangeCountry(country: CountryNameCode) {
+    this.router.navigate([
+      `/countries/${country.countryCode}/${country.countryName}`,
+    ]);
   }
 
   generateCardData(): {
@@ -326,7 +271,7 @@ export class CountryComponent implements OnInit, OnDestroy {
             // value: this.countryData.today.confirmed,
             value: this.utilService.avoidZero(
               this.countryData.today.confirmed,
-              this.countryData.timeline[0].new_confirmed
+              this.countryData.timeline[0].new_confirmed,
             ),
           },
           {
@@ -351,7 +296,7 @@ export class CountryComponent implements OnInit, OnDestroy {
             // value: this.countryData.today.deaths,
             value: this.utilService.avoidZero(
               this.countryData.timeline[0].new_deaths,
-              this.countryData.today.deaths
+              this.countryData.today.deaths,
             ),
           },
           {
@@ -375,7 +320,7 @@ export class CountryComponent implements OnInit, OnDestroy {
             name: 'rate',
             value:
               Math.round(
-                this.countryData.latest_data.calculated.recovery_rate
+                this.countryData.latest_data.calculated.recovery_rate,
               ) + '%',
           },
         ]),
@@ -387,5 +332,43 @@ export class CountryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.chartThemeSub.unsubscribe();
+  }
+
+  // filter out country selector options based on input value
+  private _filter(value: string): CountryNameCode[] {
+    const filterValue = value.toLowerCase();
+
+    return this.countryList.filter((option) =>
+      option.countryName.toLowerCase().includes(filterValue),
+    );
+  }
+
+  private _getLast3Months() {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    const today = new Date();
+    const last3Months = [];
+
+    for (let i = 0; i < 3; i++) {
+      const dateTransformed =
+        monthNames[today.getMonth() - i].substring(0, 3) + // So that it matches the datePipe format
+        ' ' +
+        today.getFullYear();
+      last3Months.push(dateTransformed);
+    }
+    return last3Months;
   }
 }

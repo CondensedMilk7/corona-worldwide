@@ -42,7 +42,7 @@ mat-spinner {
   .container {
     flex-direction: column;
 
-    .cards {
+    app-stat-cards {
       width: 100%;
       margin: auto;
 

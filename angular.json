@@ -99,9 +99,18 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }
   },
-  "defaultProject": "corona-worldwide"
+  "defaultProject": "corona-worldwide",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

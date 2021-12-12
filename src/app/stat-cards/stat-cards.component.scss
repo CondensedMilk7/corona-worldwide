@@ -1,0 +1,24 @@
+.cards {
+  padding: 8px;
+  margin-left: 24px;
+}
+
+@media (max-width: 1000px) {
+  .cards {
+    width: 100%;
+    margin: auto;
+
+    .cards__stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      app-stat-card {
+        margin: 0 8px;
+        flex-basis: 0;
+        flex-grow: 1;
+        min-width: 224px;
+      }
+    }
+  }
+}

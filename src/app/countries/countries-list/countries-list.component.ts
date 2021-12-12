@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { StatService } from 'src/app/shared/services/stat.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { CountryNameCode } from 'src/app/shared/models/country-name-code';
+import { CountriesListPageActions } from 'src/app/store/actions';
+import { AppSelectors } from 'src/app/store/selectors';
 
 @Component({
   selector: 'app-countries-list',
@@ -9,36 +12,23 @@ import { StatService } from 'src/app/shared/services/stat.service';
   styleUrls: ['./countries-list.component.scss'],
 })
 export class CountriesListComponent implements OnInit {
-  countries: { name: string; code: string }[] = [];
+  countries$: Observable<CountryNameCode[]> = this.store.select(
+    AppSelectors.getCountriesList,
+  );
+  isLoading$: Observable<boolean> = this.store.select(
+    AppSelectors.getIsLoading,
+  );
   searchText = '';
-  isLoading = true;
-  isError = false;
 
-  constructor(
-    private statService: StatService,
-    private router: Router,
-    private _snackBar: MatSnackBar
-  ) {}
+  constructor(private router: Router, private store: Store) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.statService.getCountryCodes().subscribe(
-      (data) => {
-        this.countries = data;
-        this.isLoading = false;
-      },
-      (error) => {
-        this.isError = true;
-        console.log(error);
-        this._snackBar.open(
-          'An error has occured: ' + error.message,
-          'Dismiss'
-        );
-      }
-    );
+    this.store.dispatch(CountriesListPageActions.loadPage());
   }
 
-  onCountryClicked(country: { name: string; code: string }) {
-    this.router.navigate([`/countries/${country.code}/${country.name}`]);
+  onCountryClicked(country: CountryNameCode) {
+    this.router.navigate([
+      `/countries/${country.countryCode}/${country.countryName}`,
+    ]);
   }
 }

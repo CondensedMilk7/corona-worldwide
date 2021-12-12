@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { TimelineData } from '../models/timeline-data.model';
 import { CountryData } from '../models/country-data.model';
+import { CountryNameCode } from '../models/country-name-code';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class StatService {
@@ -15,42 +17,37 @@ export class StatService {
   getGlobal() {
     return this.http
       .get<{ data: TimelineData[]; _cacheHit: boolean }>(
-        `${this.baseUrl}timeline`
+        `${this.baseUrl}timeline`,
       )
-      .pipe(
-        map((resData) => {
-          return resData.data;
-        })
-      );
+      .pipe(map((resData) => resData.data));
   }
 
   // Returns an array of objects with the name of the country and its code
-  getCountryCodes() {
+  getCountryCodes(): Observable<CountryNameCode[]> {
     return this.http
       .get<{ data: CountryData[]; _cacheHit: boolean }>(
-        `${this.baseUrl}countries`
+        `${this.baseUrl}countries`,
       )
       .pipe(
         map((resData) => {
-          const countryCodes = [];
-          for (let country of resData.data) {
-            countryCodes.push({ name: country.name, code: country.code });
+          const countryCodes: CountryNameCode[] = [];
+          for (const country of resData.data) {
+            countryCodes.push({
+              countryName: country.name,
+              countryCode: country.code,
+            });
           }
           return countryCodes;
-        })
+        }),
       );
   }
 
   // get data for specific country
-  getCountryData(countryCode: string) {
+  getCountryData(countryCode: string): Observable<CountryData> {
     return this.http
       .get<{ data: CountryData; _cacheHit: boolean }>(
-        `${this.baseUrl}countries/${countryCode}`
+        `${this.baseUrl}countries/${countryCode}`,
       )
-      .pipe(
-        map((resData) => {
-          return resData.data;
-        })
-      );
+      .pipe(map((resData) => resData.data));
   }
 }

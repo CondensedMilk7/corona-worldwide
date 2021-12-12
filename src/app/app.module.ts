@@ -25,9 +25,18 @@ import { DatePipe } from '@angular/common';
 
 import { GeneralComponent } from './general/general.component';
 import { CountriesComponent } from './countries/countries.component';
-import { StatCardComponent } from './general/stat-card/stat-card.component';
+import { StatCardComponent } from './stat-cards/stat-card/stat-card.component';
 import { CountryComponent } from './countries/country/country.component';
 import { CountriesListComponent } from './countries/countries-list/countries-list.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { appReducer } from './store/reducers/';
+import { AppEffects } from './store/effects/app.effects';
+import { ChartComponent } from './chart/chart.component';
+import { StatCardsComponent } from './stat-cards/stat-cards.component';
+import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -39,6 +48,8 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
     CountriesListComponent,
 
     FilterPipe,
+    ChartComponent,
+    StatCardsComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +74,14 @@ import { CountriesListComponent } from './countries/countries-list/countries-lis
 
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'), // imports all modules, TODO: specify only one maybe.
+    }),
+
+    StoreModule.forRoot({ app: appReducer, router: routerReducer }),
+    EffectsModule.forRoot([AppEffects]),
+    StoreRouterConnectingModule.forRoot(),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
     }),
   ],
   providers: [DatePipe],

@@ -3,17 +3,17 @@
     matInput
     type="text"
     [(ngModel)]="searchText"
-    placeholder="Search for a country"
-  />
+    placeholder="Search for a country" />
   <mat-icon>search</mat-icon>
 </div>
-<mat-spinner *ngIf="isLoading"></mat-spinner>
-<div class="container" *ngIf="!isLoading">
+<mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
+<div class="container" *ngIf="(isLoading$ | async) === false">
   <mat-card
     class="country-card"
-    *ngFor="let country of countries | filter: searchText"
-    (click)="onCountryClicked(country)"
-  >
-    <mat-card-title class="country-name"> {{ country.name }} </mat-card-title>
+    *ngFor="let country of countries$ | async | filter: searchText"
+    (click)="onCountryClicked(country)">
+    <mat-card-title class="country-name">
+      {{ country.countryName }}
+    </mat-card-title>
   </mat-card>
 </div>

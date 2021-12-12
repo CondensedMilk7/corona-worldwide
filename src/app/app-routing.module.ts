@@ -6,8 +6,9 @@ import { CountryComponent } from './countries/country/country.component';
 import { GeneralComponent } from './general/general.component';
 
 const routes: Routes = [
-  { path: 'general', component: GeneralComponent },
-  { path: '', redirectTo: 'general', pathMatch: 'full' },
+  { path: 'general/:date', component: GeneralComponent },
+  { path: 'general', redirectTo: 'general/all' },
+  { path: '', redirectTo: 'general/all', pathMatch: 'full' },
   {
     path: 'countries',
     component: CountriesComponent,

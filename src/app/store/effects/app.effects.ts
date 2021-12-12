@@ -1,0 +1,78 @@
+import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { catchError, concatMap, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { StatService } from 'src/app/shared/services/stat.service';
+import {
+  CoronaApiActions,
+  CountriesListPageActions,
+  CountryPageActions,
+  GeneralPageActions,
+} from '../actions';
+import { RouterSelectors } from '../selectors';
+
+@Injectable({ providedIn: 'root' })
+export class AppEffects {
+  loadTimeline$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(GeneralPageActions.loadPage),
+      concatMap(() =>
+        this.statService
+          .getGlobal()
+          .pipe(
+            map((response) =>
+              CoronaApiActions.getTimelineSuccess({ data: response }),
+            ),
+          ),
+      ),
+      catchError((error, caught) => {
+        this.store.dispatch(
+          CoronaApiActions.getTimelineFail({ message: error.error }),
+        );
+        this._snackbar.open(error.error, 'Dismiss');
+        return caught;
+      }),
+    ),
+  );
+
+  loadCountriesList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CountriesListPageActions.loadPage),
+      concatMap(() =>
+        this.statService.getCountryCodes().pipe(
+          map((response) =>
+            CoronaApiActions.getCountryNamesSuccess({
+              nameCodeList: response,
+            }),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  loadCountryData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CountryPageActions.loadPage, CountryPageActions.selectCountry),
+      withLatestFrom(
+        this.store.select(RouterSelectors.selectRouteParams),
+        (_action, router) => router.code
+      ),
+      switchMap((code) =>
+        this.statService
+          .getCountryData(code)
+          .pipe(
+            map((countryData) => CoronaApiActions.getCountryDataSuccess({ data: countryData })
+            ),
+          ),
+      ),
+    ),
+  );
+
+  constructor(
+    private actions$: Actions,
+    private statService: StatService,
+    private store: Store,
+    private _snackbar: MatSnackBar,
+  ) {}
+}
